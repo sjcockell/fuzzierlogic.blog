@@ -1,0 +1,64 @@
+/* Main Navbar */
+	
+#nav, #nav ul {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 940px;
+	margin: 0px;
+	padding: 0px;
+	background: url(img/bg-menu.gif) repeat-x left top;
+	list-style: none;
+}
+
+#nav a, #nav a:hover {
+	display: block;
+	float: left;
+	height: 28px;
+	padding: 12px 20px 0 20px;
+	background: url(img/bg-menu-a.gif) no-repeat right top;
+	text-decoration: none;
+	color: #fff;
+}
+
+#nav li {
+	float: left;
+	list-style:none;
+}
+	
+/* Dropdown Menus */
+	
+#nav li ul {
+	position: absolute;
+	left: -999em;
+	height: auto;
+	width: 174px;
+	border-bottom: 1px solid #6e7073;
+	z-index: 100;
+}
+
+#nav li li {
+	width: 172px;
+	border-top: 1px solid #6e7073;
+	border-right: 1px solid #6e7073;
+	border-left: 1px solid #6e7073;
+	background: #1e1f21;
+}
+
+#nav li li a, #nav li li a:hover {
+	width: 162px;
+	height: auto;
+	padding: 5px;
+	background: none;
+	font-weight:normal;
+	color:#fff;
+}
+
+#nav li li a:hover {
+	background: #4a4f54;
+}
+		
+#nav li:hover ul, #nav li li:hover ul, #nav li li li:hover ul, #nav li.sfhover ul, #nav li li.sfhover ul, #nav li li li.sfhover ul {
+	top: 40px;
+	left: auto;
+}

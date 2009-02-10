@@ -1,0 +1,157 @@
+Alexa|ia_archiver|
+Ask.com/Teoma|Jeeves/Teoma|
+Biz360|Biz360|
+Naver|NaverBot|
+Naver|naver.com|
+Naver|Cowbot|
+cURL|curl/|
+Google|Googlebot/|
+Google|googlebot/|
+Google Images|Googlebot-Image|
+LookSmart|grub-client|
+Yahoo!|slurp@inktomi|
+Yahoo!|Yahoo!Slurp|
+Yahoo!|MMCrawler|
+MSN|msnbot|
+AltaVista|Scooter-|
+Wget|Wget/1.|
+Technorati|Technoratibot|
+Moreover|Moreoverbot|
+Java|Java/|
+relevantNOISE|www.relevantnoise.com|
+Voila|VoilaBot|
+Snapbot|Snap|
+ichiro|ichiro|
+shelob|shelob|
+Google AdSense|Mediapartners-Google|
+HatenaScreenshot|HatenaScreenshot|
+Yahoo FeedSeeker|YahooFeedSeeker/|
+Baiduspider|www.baidu.com|
+BlogPulse|BlogPulse|
+Icerocket|BlogSearch|
+BlogsNow|BlogsNowBot|
+Feed::Find|Feed::Find|
+URI::Fetch|URI::Fetch|
+Google Feedfetcher|Feedfetcher-Google|
+Google Desktop|GoogleDesktop|
+Feedster|Feedster Crawler|
+Gigablast|http://www.gigablast.com/spider.html|
+LarBin|larbin_|
+Megite|Megite2.0|
+Micosi JP|micosi.jp|
+Micro$oft Bot |MSRBOT|
+McBot|McBot|
+AideRSS|aiderss.com|
+picsearch|www.picsearch.com|
+Horizon|Horizon|
+Bookmark Sync2it|sync2it.com|
+Ilial/Nutch|ilial/Nutch|
+Cuil|Twiceler|
+Heritrix|heritrix|
+Indy Library|IndyLibrary|
+Feedster|Feedster|
+WordPress|WordPress|
+Microsoft URL Control|MicrosoftURLControl|
+W3C Validator|W3C_Validator|
+Guruji|GurujiBot|
+SpokeSpider|SpokeSpider|
+Exabot|Exabot|
+Gigabot|Gigabot|
+Archive.org|archive.org_bot|
+ScSpider|ScSpider|
+PHP version tracker Nexen.net|www.nexen.net|
+Turnitin|TurnitinBot|http://www.turnitin.com/robot/crawlerinfo.html|
+DoCoMo|DoCoMo|
+xMind|xMind|
+Synoo|Synoobot|
+Fastsearch|FASTMetaWebCrawler|www.fastsearch.com
+Camdiscover|Camcrawler|www.camdiscover.com
+Majestic-12|MJ12bot|http://www.majestic12.co.uk/projects/dsearch/mj12bot.php|
+VadixBot|VadixBot|
+LOGICIEL|LOGICIEL|
+HMSE_Robot|HMSE_Robot|
+ICC-Crawler|ICC-Crawler|
+Gaisbot|Gaisbot|
+Hatena|Hatena|
+Livedoor|livedoorScreenShot|
+OrangeSpider|OrangeSpider|
+DiscoveryEngine|disco/Nutch|
+Worio|woriobot|
+FeedBurner|FeedBurner|
+Steeler|Steeler|http://www.tkl.iis.u-tokyo.ac.jp/~crawler/|
+NetSeer Teemer|Teemer|
+Bloglines|Bloglines|
+Bluecoat proxy|Bluecoat|
+IRLbot|IRLbot|
+Xenu Link Sleuth|XenuLink|
+LiteFinder|LiteFinder|
+Harry|Harry|
+Visvo|Visvo|
+AboutUs|AboutUsBot|www.aboutusbot.org|
+Neugierig|Neugierig|
+Radian6|www.radian6.com|www.radian6.com|
+Indian Language Web|IIITBOT|webkhoj.iiit.net|
+Unknow|Mozilla/4.0 (compatible; ICS 1.2.105)|
+Generic libwww-perl|libwww|
+vBSEO|vBSEO|
+Searchme.com|searchme.com|
+Grub crawler|Grub.org crawler|
+Yahoo! Japan|Y!J-|
+YodaoBot|YodaoBot|
+Sphere|SphereScout|
+Google Sitemaps|Google-Sitemaps/|
+WebAlta|WebAltaCrawler/|
+Google Labs|Python-urllib|
+NG 2.0|NG/2.0|
+Jakarta Commons|JakartaCommons|
+MSN Mobile|MSMOBOT|
+LinkWalker|LinkWalker|
+UMBC Memeta|UMBC-Memeta|
+METASpider|METASpider|
+ISC Systems iRc Search|ISCSystems|
+SimplePie|SimplePie/|
+Radian6|R6_FeedFetcher|
+Blogged|blogged_crawl|
+Sosospider|soso.com|
+UniversalFeedParser|UniversalFeedParser/|
+Yandex|yandex|
+EnaBall|EnaBot|
+LargeSmall|LargeSmallCrawler|
+YaCy|yacybot|
+Twingly|TwinglyRecon|
+PDFBot|PDFBot crawler@pdfind.com|
+CCBot|http://www.commoncrawl.org/bot.html|
+Tailrank|aggregator:Tailrank|http://www.tailrank.com/
+MLBot|www.metadatalabs.com/mlbot|
+Grazr|Grazr/v|http://grazr.com/
+Nutch|UniversityofEdinburgh/Nutch|
+FeedSpider|FeedSpider/|
+Twitturls|http://twitturls.com|
+KaloogaBot|KaloogaBot|
+Twitturly|Twitturly|
+Yanga|http://www.yanga.co.uk/|
+magpie-crawler|+http://www.brandwatch.net|
+MP3 Bot|http://mp3realm.org/mp3bot/|
+Runnk|http://www.runnk.com/|
+ScoutJet|www.scoutjet.com|
+Netcraft Web Server Survey|Netcraft|
+Yandex|Yandex|
+YoudaoBot|YoudaoBot|
+BecomeBot|BecomeBot|
+discobot|discobot|
+Wells Search|Wells|
+KiwiStatus|KiwiStatus|
+DotBot|DotBot|
+Vagabondo|wise-guys|
+ConveraCrawler|ConveraCrawler|http://ews.converasearch.com/crawl.htm
+BuzzBot|http://www.buzzlogic.com/|
+Windows Live|compatible; MSIE 6.0; Windows NT 5.2; SV1; .NET CLR 1.1.4322|
+BlogShares.com|Zipping Along V|
+Yahoo-Yahoo-YSM|Yahoo-Yahoo-YSM|mailto:vertical-crawl-support@yahoo-inc.com|
+YahooCacheSystem|YahooCacheSystem|
+newmoni|newmoni|
+Plonebot|Plonebot|Layered Technologies
+OpenID|libopkele|
+Galbot|galbot|http://www.galbot.com/bot.html
+Runnk|runnk|http://www.runnk.com
+BigBellyBot|BigBellyBot|

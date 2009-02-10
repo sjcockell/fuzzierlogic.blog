@@ -1,0 +1,404 @@
+/*
+Theme Name: deFusion
+Theme URI: http://webdemar.com/demo/?wptheme=deFusion
+Description: Clean and easy customizable WordPress theme by <a href="http://webdemar.com">webdemar</a>
+Version: 0.8.4
+Author: webdemar
+Author URI: http://webdemar.com
+Tags: simple, clean, widgets, widget ready, two columns, fixed width, valid CSS, valid XHTML
+*/
+
+/*
+	- GENERAL
+	- BASIC LAYOUT
+	- HEADINGS
+	- HEADER
+	- CONTENT
+		+ CONTENT LEFT
+		+ CONTENT RIGHT
+	- COMMENTS
+	- SEARCHFORM
+	- FOOTER
+	- USEFUL
+
+/*	##################################
+   	GENERAL
+	################################## */
+	
+body {
+	margin: 0px;
+	padding: 0px;
+	background: #1e1f21 url(img/bg-body.gif) no-repeat left top;
+	color: #6e7073;
+	font: 11px/18px "Helvetica Neue", Helvetica, Verdana, Arial, sans-serif;
+}
+
+a {
+	color: #6e7073;
+	outline: none;
+}
+
+p {
+	margin: 0 0 20px 0;
+}
+
+ul, ol {
+	margin-bottom: 20px;
+}
+
+blockquote {
+	margin: 0 0 0 10px;
+	padding: 0 0 0 10px;
+	border-left: 5px solid #f7f7f7;
+}
+
+/*	##################################
+   	BASIC LAYOUT
+	################################## */
+	
+#page {
+	width: 940px;
+	margin: 0 auto;
+}
+	
+#header {
+	position: relative;
+	height: 200px;
+}
+
+#content {
+	padding: 20px 0 0 0;
+	background: #fff;
+}
+
+#content-left {
+	float: left;
+	width: 600px;
+}
+
+#content-right {
+	float: right;
+	width: 320px;
+}
+
+#footer {
+
+}
+
+/*	##################################
+   	HEADINGS
+	################################## */
+	
+h1 {
+	position: absolute;
+	bottom: 80px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	line-height: 1;
+	font-size: 24px;
+	font-weight: normal;
+}
+
+h1 a {
+	color: #fff;
+	text-decoration: none;
+}
+
+h2 {
+	margin: 0 0 20px 20px;
+}
+
+h2#blog-description {
+	position: absolute;
+	bottom: 60px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	font-size: 11px;
+	font-weight: normal;
+}
+
+h3 {
+	margin: 0 0 20px 0;
+	font-size: 1.8em;
+	font-weight: normal;
+}
+
+h3 a {
+	text-decoration: none;
+}
+
+h3 a:hover {
+	text-decoration: underline;
+}
+
+h4 {
+	margin: 0 0 10px 0;
+	font-size: 12px;
+}
+
+/*	##################################
+   	HEADER
+	################################## */
+	
+#top-nav {
+	position: absolute;
+	top: 10px;
+	right: 0px;
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+#top-nav li {
+	float: left;
+	margin: 0 0 0 10px;
+}
+
+#top-nav li#rss {
+	padding: 0 0 0 15px;
+	background: url(img/rss-icon.gif) no-repeat left center;
+}
+
+/*	##################################
+   	CONTENT
+	################################## */
+	
+/** box left */
+
+.box-left {
+	margin: 0 0 40px 20px;
+}
+	
+.meta {
+	clear: both;
+	padding: 10px;
+	background: #fff url(img/bg-meta.gif) repeat-x left top;
+	color: #5e5e5e;
+}
+
+.meta-date {
+	padding: 0 10px 0 15px;
+	background: url(img/bg-meta-date.gif) no-repeat 0px 2px;
+}
+
+.meta-categories {
+	padding: 0 10px 0 15px;
+	background: url(img/bg-meta-categories.gif) no-repeat 0px 2px;
+}
+
+.meta-comments {
+	padding: 0 10px 0 15px;
+	background: url(img/bg-meta-comments.gif) no-repeat 0px 2px;
+}
+
+p.tags {
+	clear: both;
+}
+
+/** box right */
+
+.box-right {
+	margin: 0 20px 20px 0;
+	padding: 20px;
+	background: #f7f7f7 url(img/bg-box-right.gif) no-repeat left top;
+}
+
+.box-right ul {
+	margin: 0 0 5px 0;
+	padding: 0px;
+	list-style: none;
+}
+
+.box-right li {
+	margin: 0px;
+	padding: 5px;
+	border-bottom: 1px solid #dedede;
+}
+
+.box-right li a {
+	text-decoration: none;
+}
+
+/*	##################################
+   	COMMENTS
+	################################## */
+	
+#commentform label {
+	display: block;
+	margin: 0 0 5px 0;
+}
+
+#commentform input.text, #commentform textarea {
+	width: 500px;
+	margin: 0 0 10px 0;
+}
+
+#commentform .text {
+	height: 22px;
+	padding: 6px 6px 0 6px;
+	background: #fff url(img/bg-form-text.gif) repeat-x left top;
+	border: 1px solid #dadada;
+	color: #5e5e5e;
+}
+
+#commentform textarea {
+	height: 150px;
+	padding: 6px 6px 0 6px;
+	background: #fff url(img/bg-form-text.gif) repeat-x left top;
+	border: 1px solid #dadada;
+	color: #5e5e5e;
+}
+
+#commentform .button {
+	width: auto;
+	height: 30px;
+	margin: 0px;
+	padding: 0 20px;
+	background: #4a4f54;
+	border: none;
+	color: #fff;
+}
+
+.commentlist {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+.commentlist .quote {
+	padding: 20px;
+	background: url(img/bg-comment-quote.gif) no-repeat right top;
+}
+
+.commentlist li {
+	margin: 20px 0 0 0;
+	padding: 0px;
+	background: #4a4f54 url(img/bg-comment-bubble.gif) no-repeat left bottom;
+	color: #fff;
+}
+
+.commentlist cite {
+	display: block;
+	font-style: normal;
+}
+
+.avatar {
+	float: left;
+	margin: 0 20px 10px 0;
+}
+
+/*	##################################
+   	SEARCHFORM
+	################################## */
+	
+#searchform #search {
+	float: left;
+	width: 146px;
+	height: 22px;
+	padding: 6px 6px 0 6px;
+	background: #fff url(img/bg-form-text.gif) repeat-x left top;
+	border: 1px solid #dadada;
+	color: #5e5e5e;
+}
+
+#searchform .button {
+	width: auto;
+	height: 30px;
+	margin: 0px;
+	padding: 0 10px;
+	background: #4a4f54;
+	border: none;
+	color: #fff;
+}
+
+/*	##################################
+   	FOOTER
+	################################## */
+
+#footer {
+	width: 900px;
+	margin: 0 auto;
+	padding: 20px 0;
+}
+
+#footer p {
+	margin: 0 0 10px 0;
+}
+
+#legal {
+	float: left;
+	width: 400px;
+}
+
+#webdemar {
+	float: right;
+	width: 400px;
+	text-align: right;
+}
+
+/*	##################################
+   	USEFUL
+	################################## */
+
+.clear {
+	clear:both;
+}
+
+/** WORDPRESS CSS */
+
+.aligncenter,
+div.aligncenter {
+   	display: block;
+   	margin: 0 auto;
+}
+
+.aligncenter {
+	margin-bottom: 20px!important;
+}
+
+.alignleft {
+   	float: left;
+   	margin: 0 20px 20px 0;
+}
+
+.alignright {
+   	float: right;
+   	margin: 0 0 20px 20px;
+}
+
+.wp-caption {
+	margin-bottom: 20px;
+	padding-top: 4px;
+   	border: 1px solid #ccc;
+   	text-align: center;
+   	background-color: #f7f7f7;
+}
+
+.wp-caption img {
+   	float: none;
+   	margin: 0px;
+   	padding: 0px;
+   	border: none;
+}
+
+.wp-caption p.wp-caption-text {
+   	padding: 0px;
+  	margin: 0px;
+}
+
+/** WIDGETS CSS */
+
+#calendar_wrap table {
+	width: 100%;
+}
+
+#calendar_wrap td {
+	text-align: center;
+}
+
+#wp-calendar caption {
+	margin: 0 0 10px 0;
+	background: #dedede;
+}
