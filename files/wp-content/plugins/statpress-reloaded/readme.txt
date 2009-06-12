@@ -1,32 +1,26 @@
 === Plugin Name ===
 Contributors: matrixagent
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40matrixagents%2eorg&item_name=Dodge%20this%21&no_shipping=1&no_note=1&tax=0&currency_code=EUR&lc=DE&bn=PP%2dDonationsBF&charset=UTF%2d8
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40matrixagents%2eorg&item_name=Dodge%20this%21%20StatPress%20Reloaded&no_shipping=1&no_note=1&tax=0&currency_code=EUR&lc=DE&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: stats, statistics, widget, admin, sidebar, visits, visitors, pageview, referrer, spy
 Requires at least: 2.5
-Tested up to: 2.7
-Stable Tag: 1.5.3
+Tested up to: 2.7.1
+Stable Tag: 1.5.21
 
 This plugin shows you real time statistics about your blog. It collects information about visitors, spiders, search keywords, feeds, browsers, OS etc.
 
 
 == Description ==
 
-This plugin (previously known as StatPress) shows you real time statistics about your blog. It collects information about visitors, spiders, search keywords, feeds, browsers, OS etc.
+This plugin (a highly improved fork of StatPress) shows you real time statistics about your blog. It collects information about visitors, spiders, search keywords, feeds, browsers, OS etc.
 
 Once the plugin StatPress has been activated it immediately starts to collect information.
-Using StatPress you can see your visitors actions while they are surfing your blog or check which are the preferred pages, posts and categories.
-In the Dashboard menu you will find the StatPress page where you could look up the statistics (overview or detailed).
-StatPress also includes a widget you can add to a sidebar (or easy PHP code if you can't use widgets!).
+Using StatPress Reloaded you can see your visitors actions while they are surfing your blog or check which are the preferred pages, posts and categories.
+In the Dashboard menu you will find the StatPress Reloaded page where you could look up the statistics (overview or detailed).
+StatPress Reloaded also includes a widget you can add to a sidebar (or easy PHP code if you can't use widgets!).
 
 = Multilanguage =
-StatPress speaks English, Italian, Spanish, French, German, Russian, Norwegian, Dutch, Brazilian, Turkish, Swedish!
+StatPress Reloaded speaks English, Italian, Spanish, French, German, Russian, Norwegian, Dutch, Brazilian, Turkish, Swedish!
 Could you translate StatPress in your language? Please contact me!
-
-= What's new? =
-StatPress is alive again! Since the original author, Danielle Lippi, seems to have stopped working on it, i'm dealing with it - thank you, GPL. ;)
-This first release contains two bug fixes and many new browser agents, search engines and spider definitions. More to come!
-
-The changelog is at "Other Notes".
 
 = DB Table maintenance =
 
@@ -48,25 +42,26 @@ The widget is customizable. These are the available variables:
 * %toppost% - The most viewed Post
 * %topbrowser% - The most used Browser
 * %topos% - The most used O.S.
-* %thistotalpages%
-* %pagestoday%
+* %thistotalpages% - Total pageviews so far
+* %pagestoday% - Pageviews today
+* %pagesyesterday% - Pageviews yesterday
 * %latesthits%
 
 Now you could add these values everywhere! StatPress offers a new PHP function *StatPress_Print()*.
 * i.e. StatPress_Print("%totalvisits% total visits.");
 Put it whereever you want the details to be displayed in your template. Remember, as this is PHP, it needs to be surrounded by PHP-Tags!
 
-
 == Installation ==
 
-Upload "wp-statpress" directory in wp-content/plugins/ . Then just activate it on your plugin management page.
+Upload "statpress-reloaded" directory in wp-content/plugins/ . Then just activate it on your plugin management page.
 That's it, you're done!
+(Note: If you have been using the old StatPress before, deactivate it. Your data is taken over!)
 
 
 = Update =
 
-* Deactivate StatPress plugin (no data lost!)
-* Delete "wp-statpress" directory in wp-content/plugins/
+* Deactivate the plugin
+* Delete "statpress-reloaded" directory in wp-content/plugins/
 * Upload the content of the ZIP
 * Activate "Statpress Reloaded" on your plugin management page
 * In the Dashboard click "StatPress", then "StatPressUpdate" and wait until it will add/update db's content
@@ -362,3 +357,75 @@ Please visit the <a href="http://matrixagents.org/phpBB/">discussion board<a/>.
 
 * Small CSS bugfix
 * Fixed some missing translation strings, updated POT file. Thanks, SimonBoba!
+
+*Version 1.5.4 (19.12.2008)*
+
+* Translation related fixes
+
+*Version 1.5.5 (24.01.2009)*
+
+* Not a update, only a "news broadcast". Sorry!
+
+*Version 1.5.6 (31.01.2009)*
+
+* DISTINCT search, thanks to  rsramirez!
+* Few smaller bigfixes.
+
+*Version 1.5.7 (31.01.2009)*
+
+* It is just not possible to release a bugfix-version without instantly bugfixing afterwards, I guess.
+
+*Version 1.5.8 (03.02.2009)*
+
+* Tiny GUI fix: "Overview and StatPress aren't doubling each other in the menu any longer.
+* Spanish translations update, thanks a lot to nv1962!
+* BAN-IPs can now be entered in the same format as Google Analytics uses: regular expressions.  Thanks, mihu!
+* ReadMe fixed, now again contains all the variables you can use.
+
+*Version 1.5.9 (03.02.2009)*
+
+* Tiny GUI fix partly reverted - caused another bug.
+
+*Version 1.5.10 (05.02.2009)*
+
+* Fixed error in german translation
+* Updated Definitions (Big thanks to TheChrisD!)
+
+*Version 1.5.11 (05.02.2009)*
+
+* Only a small correction in the Readme, as there was some _really_ misleading detail in the Installation section.
+* Updated Definitions
+
+*Version 1.5.12 (23.02.2009)*
+
+* Added addiotional options to the search limits
+* Updated Definitions
+
+*Version 1.5.13 (06.03.2009)*
+
+* Croation translation, thx to Manja!
+* Fixed calculation of monthly targets, thx to Martin Bergek!
+* Added %pagesyesterday% to the placeholders
+* Updated Definitions
+
+*Version 1.5.14 (12.03.2009)*
+
+* Finally thought of 2.7.1 compatibility
+* Bulgarian translation
+* Updated Definitions
+
+*Version 1.5.16 (12.03.2009)*
+
+* Fixed a bug with a placeholder
+
+*Version 1.5.17 (07.04.2009)*
+
+* Added Czech translation, thanks to Tomas and Dušan!
+
+*Version 1.5.21 (10.05.2009)*
+
+* Updated definitions
+* Hopefully fixed the bug with the %browser%-placeholder for good
+* Included a user-bugfix for displaying wrongly encoded characters
+* The spy-page is now paginated. Spy as far back in time as you store your data. ;)
+* Sorry for the long pause, I moved to a new place and only got reconnected to the net yesterday.

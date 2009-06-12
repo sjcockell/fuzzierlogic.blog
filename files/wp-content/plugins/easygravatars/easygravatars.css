@@ -1,0 +1,26 @@
+/*
+ * Some style overrides for the Easy Gravatars options page
+ */
+
+form#easygravatars fieldset {
+        border: 1px solid #ccc;
+        padding: .5em 2em 1em;
+        margin: 1em 1em 1em 0; 
+}
+
+form#easygravatars fieldset legend {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 22px;
+}
+
+form#easygravatars fieldset label {
+	display:block;
+	float: left;
+	width: 30%;
+	text-align: right;
+	margin-right: 2em;
+}
+
+input#eg_defaulturl {
+	width: 50%;
+}

@@ -1,14 +1,14 @@
 <?php
   /*
    Plugin Name: StatPress Reloaded
-   Plugin URI: http://blog.matrixagents.org/statpress-reloaded/
+   Plugin URI: http://blog.matrixagents.org/wp-plugins/
    Description: Improved real time stats for your blog
-   Version: 1.5.3
+   Version: 1.5.21
    Author: Manuel Grabowski
    Author URI: http://blog.matrixagents.org/
    */
   
-  $_STATPRESS['version'] = '1.5.3';
+  $_STATPRESS['version'] = '1.5.21';
   $_STATPRESS['feedtype'] = '';
   
   
@@ -35,8 +35,7 @@
       }
 
 
-      add_menu_page('StatPress', 'StatPress', $mincap, __FILE__, 'iriStatPress');
-      add_submenu_page(__FILE__, __('Overview', 'statpress'), __('Overview', 'statpress'), $mincap, __FILE__ . '&statpress_action=overview', 'iriStatPressMain');
+      add_menu_page('StatPress Reloaded', 'StatPress', $mincap, __FILE__, 'iriStatPress');
       add_submenu_page(__FILE__, __('Details', 'statpress'), __('Details', 'statpress'), $mincap, __FILE__ . '&statpress_action=details', 'iriStatPressDetails');
       add_submenu_page(__FILE__, __('Spy', 'statpress'), __('Spy', 'statpress'), $mincap, __FILE__ . '&statpress_action=spy', 'iriStatPressSpy');
       add_submenu_page(__FILE__, __('Search', 'statpress'), __('Search', 'statpress'), $mincap, __FILE__ . '&statpress_action=search', 'iriStatPressSearch');
@@ -298,7 +297,7 @@
           print "date" . $del . "time" . $del . "ip" . $del . "urlrequested" . $del . "agent" . $del . "referrer" . $del . "search" . $del . "nation" . $del . "os" . $del . "browser" . $del . "searchengine" . $del . "spider" . $del . "feed\n";
           foreach ($qry as $rk)
           {
-              print '"' . $rk->date . '"' . $del . '"' . $rk->time . '"' . $del . '"' . $rk->ip . '"' . $del . '"' . $rk->urlrequested . '"' . $del . '"' . $rk->agent . '"' . $del . '"' . $rk->referrer . '"' . $del . '"' . $rk->search . '"' . $del . '"' . $rk->nation . '"' . $del . '"' . $rk->os . '"' . $del . '"' . $rk->browser . '"' . $del . '"' . $rk->searchengine . '"' . $del . '"' . $rk->spider . '"' . $del . '"' . $rk->feed . '"' . "\n";
+              print '"' . $rk->date . '"' . $del . '"' . $rk->time . '"' . $del . '"' . $rk->ip . '"' . $del . '"' . $rk->urlrequested . '"' . $del . '"' . $rk->agent . '"' . $del . '"' . $rk->referrer . '"' . $del . '"' . urldecode($rk->search) . '"' . $del . '"' . $rk->nation . '"' . $del . '"' . $rk->os . '"' . $del . '"' . $rk->browser . '"' . $del . '"' . $rk->searchengine . '"' . $del . '"' . $rk->spider . '"' . $del . '"' . $rk->feed . '"' . "\n";
           }
           die();
       }
@@ -373,7 +372,8 @@
           print "<td>" . $qry_tmonth->visitors . $qry_tmonth->change . "</td>\n";
           
           //TARGET
-          $qry_tmonth->target = round($qry_tmonth->visitors / date("d", current_time('timestamp')) * date('d', mktime(0, 0, 0, date('m', current_time('timestamp'))+1, 0, date('Y', current_time('timestamp')))));
+          
+          $qry_tmonth->target = round($qry_tmonth->visitors / (time() - mktime(0,0,0,date('m'),date('1'),date('Y'))) * (86400 * date('t')));
           if ($qry_lmonth->visitors <> 0)
           {
               $pt = round(100 * ($qry_tmonth->target / $qry_lmonth->visitors) - 100, 1);
@@ -446,7 +446,7 @@
           print "<td>" . $qry_tmonth->pageview . $qry_tmonth->change . "</td>\n";
           
           //TARGET
-          $qry_tmonth->target = round($qry_tmonth->pageview / date("d", current_time('timestamp')) * date('d', mktime(0, 0, 0, date('m', current_time('timestamp'))+1, 0, date('Y', current_time('timestamp')))));
+          $qry_tmonth->target = round($qry_tmonth->pageview / (time() - mktime(0,0,0,date('m'),date('1'),date('Y'))) * (86400 * date('t')));
           if ($qry_lmonth->pageview <> 0)
           {
               $pt = round(100 * ($qry_tmonth->target / $qry_lmonth->pageview) - 100, 1);
@@ -517,7 +517,7 @@
           print "<td>" . $qry_tmonth->spiders . $qry_tmonth->change . "</td>\n";
           
           //TARGET
-          $qry_tmonth->target = round($qry_tmonth->spiders / date("d", current_time('timestamp')) * date('d', mktime(0, 0, 0, date('m', current_time('timestamp'))+1, 0, date('Y', current_time('timestamp')))));
+          $qry_tmonth->target = round($qry_tmonth->spiders / (time() - mktime(0,0,0,date('m'),date('1'),date('Y'))) * (86400 * date('t')));
           if ($qry_lmonth->spiders <> 0)
           {
               $pt = round(100 * ($qry_tmonth->target / $qry_lmonth->spiders) - 100, 1);
@@ -587,7 +587,7 @@
           print "<td>" . $qry_tmonth->feeds . $qry_tmonth->change . "</td>\n";
           
           //TARGET
-          $qry_tmonth->target = round($qry_tmonth->feeds / date("d", current_time('timestamp')) * date('d', mktime(0, 0, 0, date('m', current_time('timestamp'))+1, 0, date('Y', current_time('timestamp')))));
+          $qry_tmonth->target = round($qry_tmonth->feeds / (time() - mktime(0,0,0,date('m'),date('1'),date('Y'))) * (86400 * date('t')));
           if ($qry_lmonth->feeds <> 0)
           {
               $pt = round(100 * ($qry_tmonth->target / $qry_lmonth->feeds) - 100, 1);
@@ -757,7 +757,7 @@
           $qry = $wpdb->get_results("SELECT date,time,referrer,urlrequested,search,searchengine FROM $table_name WHERE search<>'' ORDER BY id DESC $querylimit");
           foreach ($qry as $rk)
           {
-              print "<tr><td>" . irihdate($rk->date) . "</td><td>" . $rk->time . "</td><td><a href='" . $rk->referrer . "'>" . $rk->search . "</a></td><td>" . $rk->searchengine . "</td><td><a href='" . irigetblogurl() . ((strpos($rk->urlrequested, 'index.php') === FALSE) ? $rk->urlrequested : '') . "'>" . __('page viewed', 'statpress') . "</a></td></tr>\n";
+              print "<tr><td>" . irihdate($rk->date) . "</td><td>" . $rk->time . "</td><td><a href='" . $rk->referrer . "'>" . urldecode($rk->search) . "</a></td><td>" . $rk->searchengine . "</td><td><a href='" . irigetblogurl() . ((strpos($rk->urlrequested, 'index.php') === FALSE) ? $rk->urlrequested : '') . "'>" . __('page viewed', 'statpress') . "</a></td></tr>\n";
           }
           print "</table></div>";
           
@@ -830,7 +830,7 @@
           $querylimit = "LIMIT 10";
           
           // Top days
-          iriValueTable("date", __('Top days', 5));
+          iriValueTable("date", __('Top days', 'statpress'), 5);
           
           // O.S.
           iriValueTable("os", __('O.S.', 'statpress'), 0, "", "", "AND feed='' AND spider='' AND os<>''");
@@ -879,11 +879,37 @@
           global $wpdb;
           $table_name = $wpdb->prefix . "statpress";
           
+          $LIMIT = 20;
+          
+          if(isset($_GET['pn']))
+          {
+          	// Get Current page from URL
+          	$page = $_GET['pn'];
+          	if($page <= 0)
+          	{
+          		// Page is less than 0 then set it to 1
+          		$page = 1;
+          	}
+          }
+          else
+          {
+          	// URL does not show the page set it to 1
+          	$page = 1;
+          }
+          
+          	// Create MySQL Query String
+			$strqry = "SELECT id FROM $table_name WHERE (spider='' AND feed='') GROUP BY ip";
+			$query = $wpdb->get_results($strqry);
+			$TOTALROWS = $wpdb->num_rows;
+			$NumOfPages = $TOTALROWS / $LIMIT;
+			$LimitValue = ($page * $LIMIT) - $LIMIT;
+			
+			
           // Spy
           $today = gmdate('Ymd', current_time('timestamp'));
           $yesterday = gmdate('Ymd', current_time('timestamp') - 86400);
           print "<div class='wrap'><h2>" . __('Spy', 'statpress') . "</h2>";
-          $sql = "SELECT ip,nation,os,browser,agent FROM $table_name WHERE (spider='' AND feed='') AND (date BETWEEN '$yesterday' AND '$today') GROUP BY ip ORDER BY id DESC LIMIT 20";
+          $sql = "SELECT ip,nation,os,browser,agent FROM $table_name WHERE (spider='' AND feed='') GROUP BY ip ORDER BY id DESC LIMIT $LimitValue, $LIMIT";
           $qry = $wpdb->get_results($sql);
 ?>
 <script>
@@ -894,6 +920,39 @@ document.getElementById(thediv).style.display="none"
 }
 </script>
 <div align="center">
+<div id="paginating" align="center">Pages:
+<?php
+
+// Check to make sure we’re not on page 1 or Total number of pages is not 1
+if($page == ceil($NumOfPages) && $page != 1) {
+  for($i = 1; $i <= ceil($NumOfPages)-1; $i++) {
+    // Loop through the number of total pages
+    if($i > 0) {
+      // if $i greater than 0 display it as a hyperlink
+      echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?page=statpress-reloaded/statpress.php&statpress_action=spy&pn=' . $i . '">' . $i . '</a> ';
+      }
+    }
+}
+if($page == ceil($NumOfPages) ) {
+  $startPage = $page;
+} else {
+  $startPage = 1;
+}
+for ($i = $startPage; $i <= $page+6; $i++) {
+  // Display first 7 pages
+  if ($i <= ceil($NumOfPages)) {
+    // $page is not the last page
+    if($i == $page) {
+      // $page is current page
+      echo " [{$i}] ";
+    } else {
+      // Not the current page Hyperlink them
+      echo '<a href="' . $_SERVER['SCRIPT_NAME'] . '?page=statpress-reloaded/statpress.php&statpress_action=spy&pn=' . $i . '">' . $i . '</a> ';
+    }
+  }
+}
+?>
+</div>
 <table id="mainspytab" name="mainspytab" width="99%" border="0" cellspacing="0" cellpadding="4">
 <?php
           foreach ($qry as $rk)
@@ -921,7 +980,7 @@ document.getElementById(thediv).style.display="none"
                   print "<td><div><a href='" . irigetblogurl() . ((strpos($details->urlrequested, 'index.php') === FALSE) ? $details->urlrequested : '') . "' target='_blank'>" . iri_StatPress_Decode($details->urlrequested) . "</a>";
                   if ($details->searchengine != '')
                   {
-                      print "<br><small>" . __('arrived from', 'statpress') . " <b>" . $details->searchengine . "</b> " . __('searching', 'statpress') . " <a href='" . $details->referrer . "' target=_blank>" . $details->search . "</a></small>";
+                      print "<br><small>" . __('arrived from', 'statpress') . " <b>" . $details->searchengine . "</b> " . __('searching', 'statpress') . " <a href='" . $details->referrer . "' target=_blank>" . urldecode($details->search) . "</a></small>";
                   }
                   elseif ($details->referrer != '' && strpos($details->referrer, get_option('home')) === false)
                   {
@@ -999,6 +1058,11 @@ document.getElementById(thediv).style.display="none"
 ?>> <?php
           _e('include feed', 'statpress');
 ?></td></tr>
+<tr><td><input type=checkbox name=distinct value=checked <?php
+          print $_GET['distinct']
+?>> <?php
+          _e('SELECT DISTINCT', 'statpress');
+?></td></tr>
       </table>
     </td>
     <td width=15> </td>
@@ -1013,7 +1077,7 @@ document.getElementById(thediv).style.display="none"
           {
               print "<option>" . $_GET['limitquery'] . "</option>";
           }
-?><option>1</option><option>5</option><option>10</option><option>20</option><option>50</option></select>
+?><option>1</option><option>5</option><option>10</option><option>20</option><option>50</option><option>100</option><option>250</option><option>500</option></select>
           </td>
         </tr>
         <tr><td>&nbsp;</td></tr>
@@ -1096,6 +1160,11 @@ document.getElementById(thediv).style.display="none"
               
               
               $limit = "LIMIT " . $_GET['limitquery'];
+              
+              if ($_GET['distinct'] == 'checked')
+{
+   $fields = " DISTINCT " . $fields;
+}
               
               // Results
               print "<h2>" . __('Results', 'statpress') . "</h2>";
@@ -1322,6 +1391,12 @@ document.getElementById(thediv).style.display="none"
                   {
                       $rk->$fld = iri_StatPress_Decode($rk->$fld);
                   }
+                  
+                  if ($fld == 'search')
+                  {
+                  	$rk->$fld = urldecode($rk->$fld);
+                  }
+                  
                   //      $chl.=urlencode(my_substr($rk->$fld,0,50))."|";
                   //      $chd.=($tdwidth*$pc/100)."|";
                   print "<tr><td style='width:400px;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;'>" . my_substr($rk->$fld, 0, 50);
@@ -1410,20 +1485,24 @@ document.getElementById(thediv).style.display="none"
           return '';
       }
       
-      function iriCheckBanIP($arg)
+	  function iriCheckBanIP($arg)
       {
-         if (file_exists(ABSPATH . 'wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '-custom/banips.dat'))
-            $lines = file(ABSPATH . 'wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '-custom/banips.dat');
+          if (file_exists(ABSPATH . 'wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '-custom/banips.dat'))
+              $lines = file(ABSPATH . 'wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '-custom/banips.dat');
           else
               $lines = file(ABSPATH . 'wp-content/plugins/' . dirname(plugin_basename(__FILE__)) . '/def/banips.dat');
-          foreach ($lines as $line_num => $banip)
-          {
-              if (@strpos($arg, rtrim($banip, "\n")) === false)
-                  continue;
-              // riconosciuto, da scartare
-              return '';
+         
+        if ($lines !== false)
+        {
+            foreach ($lines as $banip)
+              {
+               if (@preg_match('/^' . rtrim($banip, "\r\n") . '$/', $arg)){
+                   return true;
+               }
+                  // riconosciuto, da scartare
+              }
           }
-          return $arg;
+          return false;
       }
       
       function iriGetSE($referrer = null)
@@ -1443,7 +1522,7 @@ document.getElementById(thediv).style.display="none"
                   $tab = explode("=", $variables[$i]);
                   if ($tab[0] == $key)
                   {
-                      return($nome . "|" . urldecode($tab[1]));
+                      return($nome . "|" . urlencode($tab[1]));
                   }
               }
           }
@@ -1612,7 +1691,7 @@ function iri_StatPress_extractfeedreq($url)
           
           // IP
           $ipAddress = $_SERVER['REMOTE_ADDR'];
-          if (iriCheckBanIP($ipAddress) == '')
+          if (iriCheckBanIP($ipAddress) === true)
           {
               return '';
           }
@@ -1872,6 +1951,7 @@ function iri_StatPress_extractfeedreq($url)
           }
           if (strpos(strtolower($body), "%browser%") !== false)
           {
+              $userAgent = (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
               $browser = iriGetBrowser($userAgent);
               $body = str_replace("%browser%", $browser, $body);
           }
@@ -1921,16 +2001,24 @@ function iri_StatPress_extractfeedreq($url)
       				$body = str_replace("%thistotalpages%", $qry[0]->pageview, $body);
       		}
       		
-      		 if (strpos(strtolower($body), "%latesthits%") !== false)
-						{
-							$qry = $wpdb->get_results("SELECT search FROM $table_name WHERE search <> '' ORDER BY id DESC LIMIT 10");
-							$body = str_replace("%latesthits%", $qry[0]->search, $body);
-							for ($counter = 0; $counter < 10; $counter += 1)
-							{
-								$body .= "<br>". $qry[$counter]->search;
-							}
-						}
-   				
+      		if (strpos(strtolower($body), "%latesthits%") !== false)
+			{
+				$qry = $wpdb->get_results("SELECT search FROM $table_name WHERE search <> '' ORDER BY id DESC LIMIT 10");
+				$body = str_replace("%latesthits%", urldecode($qry[0]->search), $body);
+				for ($counter = 0; $counter < 10; $counter += 1)
+				{
+					$body .= "<br>". urldecode($qry[$counter]->search);
+				}
+			}
+			
+			if (strpos(strtolower($body), "%pagesyesterday%") !== false)
+			{
+				$yesterday = gmdate('Ymd', current_time('timestamp') - 86400);
+				$qry = $wpdb->get_row("SELECT count(DISTINCT ip) AS visitsyesterday FROM $table_name WHERE feed='' AND spider='' AND date = '" . $yesterday . "'");
+				$body = str_replace("%pagesyesterday%", (is_array($qry) ? $qry[0]->visitsyesterday : 0), $body);
+			}
+          
+			
           return $body;
       }
       

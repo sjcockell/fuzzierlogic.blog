@@ -14,300 +14,542 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SearchPath-0: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress\n"
+": "
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress
-#: copia.php:688
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:1027
+#: statpress.php:1975
 msgid "Title:"
 msgstr "Título:"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress
-#: copia.php:689
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:1028
+#: statpress.php:1976
 msgid "Body:"
 msgstr "Cuerpo:"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:33
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:147
+#: statpress.php:39
+#: statpress.php:39
+#: statpress.php:323
 msgid "Overview"
 msgstr "Sumario"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:34
+#: statpress.php:40
+#: statpress.php:40
 msgid "Details"
 msgstr "Detalles"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:35
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:439
+#: statpress.php:41
+#: statpress.php:41
+#: statpress.php:885
 msgid "Spy"
 msgstr "Espía"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:36
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:509
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:548
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:642
+#: statpress.php:42
+#: statpress.php:42
+#: statpress.php:957
+#: statpress.php:1022
+#: statpress.php:1185
+#: statpress.php:1214
 msgid "Search"
 msgstr "Buscar"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:37
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:113
+#: statpress.php:43
+#: statpress.php:43
+#: statpress.php:279
 msgid "Export"
 msgstr "Exportar"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:38
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:71
+#: statpress.php:44
+#: statpress.php:44
+#: statpress.php:141
 msgid "Options"
 msgstr "Opciones"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:68
+#: statpress.php:135
 msgid "Saved"
 msgstr "Guardado"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:74
+#: statpress.php:145
 msgid "Collect data about logged users, too."
-msgstr "Registrar también los datos de usuarios autenticados."
+msgstr "Registrar también datos de usuarios autenticados."
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:76
+#: statpress.php:149
 msgid "Automatically delete visits older than"
 msgstr "Automáticamente borrar las visitas anteriores al"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:78
+#: statpress.php:156
+#: statpress.php:186
 msgid "Never delete!"
 msgstr "¡Nunca!"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:79
+#: statpress.php:162
+#: statpress.php:189
 msgid "month"
 msgstr "mes"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:80
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:81
+#: statpress.php:168
+#: statpress.php:174
 msgid "months"
 msgstr "meses"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:82
+#: statpress.php:180
+#: statpress.php:190
 msgid "year"
 msgstr "año"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:85
+#: statpress.php:194
 msgid "Days in Overview graph"
 msgstr "Días en el gráfico del Sumario"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:94
+#: statpress.php:233
 msgid "Save options"
 msgstr "Guardar opciones"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:109
+#: statpress.php:266
 msgid "Export stats to text file"
 msgstr "Exportar estadísticas a un archivo de texto"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:111
+#: statpress.php:270
 msgid "From"
 msgstr "Desde"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:112
+#: statpress.php:273
 msgid "To"
 msgstr "Al"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:148
+#: statpress.php:326
 msgid "Total"
 msgstr "Total"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:148
+#: statpress.php:327
 msgid "Last month"
 msgstr "Mes anterior"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:148
+#: statpress.php:328
+#: statpress.php:329
 msgid "This month"
 msgstr "Este mes"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:148
+#: statpress.php:330
 msgid "Yesterday"
 msgstr "Ayer"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:148
+#: statpress.php:331
 msgid "Today"
 msgstr "Hoy"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:152
+#: statpress.php:337
 msgid "Visitors"
 msgstr "Visitantes"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:175
+#: statpress.php:409
 msgid "Pageviews"
 msgstr "Páginas vistas"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:320
+#: statpress.php:718
 msgid "Last hits"
 msgstr "Últimos accesos"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:320
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:350
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:359
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:369
+#: statpress.php:718
+#: statpress.php:755
+#: statpress.php:765
+#: statpress.php:775
+#: statpress.php:785
+#: statpress.php:797
+#: statpress.php:1556
 msgid "Date"
 msgstr "Fecha"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:320
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:350
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:359
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:369
+#: statpress.php:718
+#: statpress.php:755
+#: statpress.php:765
+#: statpress.php:775
+#: statpress.php:785
+#: statpress.php:798
 msgid "Time"
 msgstr "Hora"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:320
+#: statpress.php:718
 msgid "Domain"
 msgstr "Dominio"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:320
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:369
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:639
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:649
+#: statpress.php:718
+#: statpress.php:785
+#: statpress.php:800
+#: statpress.php:1173
+#: statpress.php:1195
+#: statpress.php:1202
+#: statpress.php:1224
 msgid "Page"
 msgstr "Página"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
+#: statpress.php:755
 msgid "Last search terms"
-msgstr "Últimos términos de búsqueda"
+msgstr "Últimos términos buscados"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
+#: statpress.php:755
 msgid "Terms"
 msgstr "Términos"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
+#: statpress.php:755
 msgid "Engine"
 msgstr "Motor"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:340
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:350
+#: statpress.php:755
+#: statpress.php:765
 msgid "Result"
 msgstr "Resultado"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:344
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:354
+#: statpress.php:760
+#: statpress.php:770
 msgid "page viewed"
 msgstr "página vista"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:350
+#: statpress.php:765
 msgid "Last referrers"
 msgstr "Últimas procedencias"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:350
+#: statpress.php:765
 msgid "URL"
-msgstr "URL"
+msgstr "Enlace"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:359
+#: statpress.php:775
 msgid "Last agents"
 msgstr "Últimos agentes"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:359
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:500
+#: statpress.php:775
+#: statpress.php:801
+#: statpress.php:947
 msgid "Agent"
 msgstr "Agente"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:359
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:369
+#: statpress.php:775
+#: statpress.php:785
 msgid "What"
-msgstr "Qué"
+msgstr "Cuál"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:369
+#: statpress.php:785
 msgid "Last pages"
 msgstr "Últimas páginas"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:458
+#: statpress.php:228
+#: statpress.php:904
 msgid "more info"
 msgstr "más info"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:480
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:482
+#: statpress.php:924
+#: statpress.php:928
 msgid "arrived from"
 msgstr "llegado desde"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:480
+#: statpress.php:924
 msgid "searching"
 msgstr "buscando"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:499
+#: statpress.php:946
 msgid "URL Requested"
-msgstr "URL solicitado"
+msgstr "Enlace solicitado"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:501
+#: statpress.php:948
 msgid "Referrer"
 msgstr "Procedencia"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:502
+#: statpress.php:949
 msgid "Search terms"
 msgstr "Términos de búsqueda"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:503
+#: statpress.php:950
 msgid "Search engine"
 msgstr "Motor de búsquedas"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:504
+#: statpress.php:951
 msgid "Operative system"
 msgstr "Sistema operativo"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:514
+#: statpress.php:964
 msgid "Field"
 msgstr "Campo"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:521
+#: statpress.php:975
 msgid "Group by"
 msgstr "Agrupar por"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:522
+#: statpress.php:976
 msgid "Sort by"
 msgstr "Ordenar por"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:523
+#: statpress.php:977
 msgid "if contains"
 msgstr "si contiene"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:533
+#: statpress.php:990
 msgid "sort by count if grouped"
-msgstr "ordenar por frecuencia si está agrupado"
+msgstr "ordenar por frecuencia si viene agrupado"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:534
+#: statpress.php:995
 msgid "include spiders/crawlers/bot"
 msgstr "incluir spiders/crawlers/bot"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:535
+#: statpress.php:1000
 msgid "include feed"
 msgstr "incluir feed"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:542
+#: statpress.php:1009
+#: statpress.php:2017
 msgid "Limit results to"
 msgstr "Limitar los resultados a"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:605
+#: statpress.php:1101
 msgid "Results"
 msgstr "Resultados"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:612
+#: statpress.php:1114
+#: statpress.php:1559
 msgid "Count"
-msgstr "Contador"
+msgstr "Frecuencia"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:640
+#: statpress.php:1177
+#: statpress.php:1206
 msgid "Category"
 msgstr "Categoría"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:641
+#: statpress.php:1181
+#: statpress.php:1210
 msgid "Calendar"
 msgstr "Calendario"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:697
+#: statpress.php:1296
+#: statpress.php:2018
 msgid "Visits"
 msgstr "Visitas"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:889
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:900
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:911
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:922
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:943
+#: statpress.php:1722
+#: statpress.php:1765
+#: statpress.php:1777
+#: statpress.php:1789
+#: statpress.php:1802
+#: statpress.php:1807
+#: statpress.php:1825
 msgid "done"
 msgstr "listo"
 
-#: /Users/danielelippi/sviluppo/statpress/statpress/trunk/wp-statpress/statpress.php:947
+#: statpress.php:1829
 msgid "Updated"
 msgstr "Actualizado"
+
+#: statpress.php:45
+#: statpress.php:45
+msgid "User Agents"
+msgstr "Navegador/cliente"
+
+#: statpress.php:46
+#: statpress.php:46
+msgid "StatPressUpdate"
+msgstr "Actualizar BD de StatPress"
+
+#: statpress.php:47
+#: statpress.php:47
+msgid "Support"
+msgstr "Soporte"
+
+#: statpress.php:146
+msgid "Do not collect spiders visits"
+msgstr "No registrar datos de rastreadores"
+
+#: statpress.php:184
+msgid "Automatically delete spider visits older than"
+msgstr "Borrar automáticamente visitas de rastreadores más antiguos que"
+
+#: statpress.php:187
+msgid "day"
+msgstr "día"
+
+#: statpress.php:188
+msgid "week"
+msgstr "semana"
+
+#: statpress.php:220
+msgid "Minimum capability to view stats"
+msgstr "Capacidades mínimas para ver estadísticas"
+
+#: statpress.php:276
+msgid "Fields delimiter"
+msgstr "Delimitador de campos"
+
+#: statpress.php:329
+msgid "Target"
+msgstr "Cálculo"
+
+#: statpress.php:481
+#: statpress.php:857
+msgid "Spiders"
+msgstr "Rastreadores"
+
+#: statpress.php:552
+#: statpress.php:842
+msgid "Feeds"
+msgstr "Feeds"
+
+#: statpress.php:699
+msgid "visitors"
+msgstr "visitantes"
+
+#: statpress.php:700
+msgid "pageviews"
+msgstr "Páginas vistas"
+
+#: statpress.php:701
+msgid "spiders"
+msgstr "rastreadores"
+
+#: statpress.php:702
+msgid "feeds"
+msgstr "feeds"
+
+#: statpress.php:718
+#: statpress.php:954
+#: statpress.php:1558
+msgid "IP"
+msgstr "IP"
+
+#: statpress.php:718
+msgid "Threat"
+msgstr "Peligrosidad"
+
+#: statpress.php:718
+msgid "OS"
+msgstr "S.O."
+
+#: statpress.php:718
+#: statpress.php:839
+#: statpress.php:952
+msgid "Browser"
+msgstr "Navegador"
+
+#: statpress.php:718
+msgid "Feed"
+msgstr "Feed"
+
+#: statpress.php:795
+msgid "Last spiders"
+msgstr "Últimos rastreadores"
+
+#: statpress.php:799
+#: statpress.php:953
+msgid "Spider"
+msgstr "Rastreador"
+
+#: statpress.php:816
+msgid "StatPress table size"
+msgstr "Tamaño de tabla de datos StatPress"
+
+#: statpress.php:817
+msgid "StatPress current time"
+msgstr "Hora actual de StatPress"
+
+#: statpress.php:818
+msgid "RSS2 url"
+msgstr "Enlace de RSS2"
+
+#: statpress.php:819
+msgid "ATOM url"
+msgstr "Enlace de Atom"
+
+#: statpress.php:820
+msgid "RSS url"
+msgstr "Enlace de RSS"
+
+#: statpress.php:821
+msgid "COMMENT RSS2 url"
+msgstr "Enlace de comentarios por RSS2"
+
+#: statpress.php:822
+msgid "COMMENT ATOM url"
+msgstr "Enlace de comentarios por Atom"
+
+#: statpress.php:833
+msgid "Top days"
+msgstr "Días más activos"
+
+#: statpress.php:836
+msgid "O.S."
+msgstr "Sistema operativo"
+
+#: statpress.php:845
+msgid "Search engines"
+msgstr "Motores de búsqueda"
+
+#: statpress.php:848
+msgid "Top search terms"
+msgstr "Términos más buscados"
+
+#: statpress.php:851
+msgid "Top referrer"
+msgstr "Procedencia más activa"
+
+#: statpress.php:854
+msgid "Countries (domains)"
+msgstr "Países (dominios)"
+
+#: statpress.php:860
+msgid "Top pages"
+msgstr "Páginas más activas"
+
+#: statpress.php:864
+msgid "Top Days - Unique visitors"
+msgstr "Días más activos, en visitantes únicos"
+
+#: statpress.php:868
+msgid "Top Days - Pageviews"
+msgstr "Días más activos, en páginas vistas"
+
+#: statpress.php:872
+msgid "Top IPs - Pageviews"
+msgstr "IPs más activos, en páginas vistas"
+
+#: statpress.php:1554
+msgid "Unknown User Agents"
+msgstr "Agentes desconocidos"
+
+#: statpress.php:1557
+msgid "Last Time"
+msgstr "Última vez"
+
+#: statpress.php:1560
+msgid "User Agent"
+msgstr "Agente del usuario"
+
+#: statpress.php:1720
+msgid "Updating table struct"
+msgstr "Actualizando la estructura de la tabla de datos"
+
+#: statpress.php:1725
+#: statpress.php:1805
+msgid "Updating Feeds"
+msgstr "Actualizando los feeds"
+
+#: statpress.php:1768
+msgid "Updating OS"
+msgstr "Actualizando la lista de S.O."
+
+#: statpress.php:1780
+msgid "Updating Browsers"
+msgstr "Actualizando lista de navegadores"
+
+#: statpress.php:1791
+msgid "Updating Spiders"
+msgstr "Actualizando lista de rastreadores"
+
+#: statpress.php:1810
+msgid "Updating Search engines"
+msgstr "Actualizando lista de motores de búsqueda"
+
+#: statpress.php:1813
+msgid "null-ed"
+msgstr "reiniciado"
+
+#: statpress.php:1815
+msgid "select-ed"
+msgstr "seleccionado"
+
+#: statpress.php:2016
+msgid "Title"
+msgstr "Título"
 
