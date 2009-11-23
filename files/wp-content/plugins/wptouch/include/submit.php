@@ -24,22 +24,16 @@
 			$a['enable-cats-button'] = 0;
 		}
 
+		if ( isset( $_POST['enable-tags-button'] ) ) {
+			$a['enable-tags-button'] = 1;
+		} else {
+			$a['enable-tags-button'] = 0;
+		}
+
 		if ( isset( $_POST['enable-login-button'] ) ) {
 			$a['enable-login-button'] = 1;
 		} else {
 			$a['enable-login-button'] = 0;
-		}
-
-		if ( isset($_POST['enable-redirect'] ) ) {
-			$a['enable-redirect'] = 1;
-		} else {
-			$a['enable-redirect'] = 0;
-		}
-
-		if ( isset( $_POST['enable-js-header'] ) ) {
-			$a['enable-js-header'] = 1;
-		} else {
-			$a['enable-js-header'] = 0;
 		}
 
 		if ( isset( $_POST['enable-gravatars'] ) ) {
@@ -48,6 +42,12 @@
 			$a['enable-gravatars'] = 0;
 		}
 
+		if ( isset( $_POST['enable-ajax-comments'] ) ) {
+			$a['enable-ajax-comments'] = 1;
+		} else {
+			$a['enable-ajax-comments'] = 0;
+		}
+		
 		if ( isset( $_POST['enable-main-home'] ) ) {
 			$a['enable-main-home'] = 1;
 		} else {
@@ -84,6 +84,30 @@
 			$a['enable-main-categories'] = 0;
 		}
 
+//Prowl
+		if ( isset($_POST['prowl-api']) ) {
+			$a['prowl-api'] = $_POST['prowl-api'];
+		}
+		
+		if ( isset( $_POST['enable-prowl-comments-button'] ) ) {
+			$a['enable-prowl-comments-button'] = 1;
+		} else {
+			$a['enable-prowl-comments-button'] = 0;
+		}
+		
+		if ( isset( $_POST['enable-prowl-users-button'] ) ) {
+			$a['enable-prowl-users-button'] = 1;
+		} else {
+			$a['enable-prowl-users-button'] = 0;
+		}
+
+		if ( isset( $_POST['enable-prowl-message-button'] ) ) {
+			$a['enable-prowl-message-button'] = 1;
+		} else {
+			$a['enable-prowl-message-button'] = 0;
+		}
+//
+
 		if ( isset( $_POST['home-page'] ) ) {
 			$a['home-page'] = $_POST['home-page'];
 			if (strlen($a['home-page']) == 0) {
@@ -107,10 +131,8 @@
 			$a['enable-regular-default'] = 0;
 		}
 
-		if ( isset($_POST['enable-gzip']) ) {
-			$a['enable-gzip'] = 1;
-		} else {
-			$a['enable-gzip'] = 0;
+		if ( isset($_POST['excluded-cat-ids']) ) {
+			$a['excluded-cat-ids'] = $_POST['excluded-cat-ids'];
 		}
 
 		if ( isset($_POST['adsense-id']) ) {
@@ -121,10 +143,6 @@
 			$a['adsense-channel'] = $_POST['adsense-channel'];
 		}		
 
-		if ( isset($_POST['style-text-size']) ) {
-			$a['style-text-size'] = $_POST['style-text-size'];
-		}
-
 		if ( isset($_POST['style-text-justify']) ) {
 			$a['style-text-justify'] = $_POST['style-text-justify'];
 		}
@@ -133,10 +151,6 @@
 			$a['style-background'] = $_POST['style-background'];
 		}
 
-		if ( isset( $_POST['bnc-zoom-state']) ) {
-			$a['bnc-zoom-state'] = $_POST['bnc-zoom-state'];
-		}
-		
 		if ( isset( $_POST['enable-exclusive'] ) ) {
 			$a['enable-exclusive'] = 1;	
 		} else {
@@ -164,12 +178,17 @@
 	$a['header-border-color'] = $_POST['header-border-color'];
 	$a['header-text-color'] = $_POST['header-text-color'];
 	$a['link-color'] = $_POST['link-color'];
+//Prowl
+	$a['prowl-api'] = $_POST['prowl-api'];
 
 	$values = serialize($a);
 	update_option('bnc_iphone_pages', $values);
-}
+ 	} 
+// The Master Kill Switch
+	elseif ( isset( $_POST['reset'] ) ) {
+		update_option( 'bnc_iphone_pages', '' );
+ }
 
 global $wptouch_settings;
 $wptouch_settings = bnc_wptouch_get_settings();
-
 ?>

@@ -1,43 +1,120 @@
 === Plugin Name ===
-Contributors: BraveNewCode
+Contributors: BraveNewCode, duanestorey, dalemugford
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40bravenewcode%2ecom&item_name=WPtouch%20Beer%20Fund&no_shipping=0&no_note=1&tax=0&currency_code=CAD&lc=CA&bn=PP%2dDonationsBF&charset=UTF%2d8
 Tags: wptouch, iphone, ipod touch, theme, apple, mac, bravenewcode, ajax, mobile, mobile, android, blackberry
-Requires at least: 2.3.x
-Tested up to: 2.7.1
-Stable tag: 1.8.9.1
+Requires at least: 2.6
+Tested up to: 2.8.4
+Stable tag: 1.9.3.2
 
-WPtouch automatically transforms your WordPress blog into an iPhone application-style theme, complete with ajax loading articles and effects, when viewed from an iPhone or iPod touch.
-
-Downloaded over *95,000 times* (bravenewcode.com + wordpress.org) since April 2008. 
+WPtouch automatically transforms your WordPress blog into an iPhone application-style theme, complete with ajax loading articles and effects, when viewed from an iPhone, iPod touch, Android, Opera Mini, Palm Pre and BlackBerry Storm mobile devices.
 
 == Description ==
 
-With a single click, *WPtouch* transforms your WordPress blog into an iPhone application-style theme, complete with ajax loading articles and effects, when viewed from an iPhone or iPod touch.
+With a single click, *WPtouch* transforms your WordPress blog into an iPhone application-style theme, complete with ajax loading articles and effects, when viewed from an iPhone, iPod touch, Android or BlackBerry touch mobile device.
 
-The admin panel allows you to customize many aspects of its appearance, and deliver a fast, user-friendly and stylish version of your site to your iPhone and iPod touch visitors without modifying a single bit of code (or affecting) your regular desktop theme.
+The admin panel allows you to customize many aspects of its appearance, and deliver a fast, user-friendly and stylish version of your site to your iPhone, iPod touch, Android, Opera Mini mobile, Palm Pre and BlackBerry Storm visitors without modifying a single bit of code (or affecting) your regular desktop theme.
 
 The theme also includes the ability for your visitors to easily switch between the *WPtouch* view and your site's regular theme.
 
-= New In Version 1.8.9.1: =
-
-* Fixed refresh issue (some pages keep re-loading)
-* Fixed mkdir issue on PHP4 installations
-* Set viewport to fixed width for device to prevent some sites from loading wide
-* Minor revisions to new CSS calendar icon styling
-* Added exclusive mode feature to help in situations where other plugins are incompatible, load too many scripts/css files and both break and slow down WPtouch
-* Added Fancybox for some feature descriptions in the admin
-
-
-Please visit http://bravenewcode.com/wptouch/ for a full description & updates on the WPtouch plugin.
-
-You can also checkout our Support Forums at http://support.bravenewcode.com to post questions and learn tips and tricks for WPtouch and our other plugins.
-
-
 == What's New ==
 
-(Here's the complete changelog)
+= Version 1.9.3.2 =
+* Fixed logic with PUSH notification via Prowl
 
-= Version 1.8.9.1 (latest): =
+= Version 1.9.3.1 =
+* Removed unneeded files
+* Bug fixes
+* Style fixes for the display of comments
+
+
+= Version 1.9.3 =
+* Fixed issue where regular theme view would not allow pinching for zoom
+* Fixed JS bug in theme
+* Possible fix for time since on comments not working in some situations
+* Added option to disable Ajax comments for those who can't get them working
+
+
+= Version 1.9.2.2 =
+* Fixed issue where mobile switch to regular theme was always zoomed in and required refresh
+* Fixed issue where pages changed from published to unpublished still showed in the WPtouch menu
+* Fixed issue where 'Load More Entries' caused blank page or other issues. WPtouch now detect possible issues and defaults to pagination
+* WPtouch now loads minified versions of its CSS and JS for the theme, speeding up load times
+
+
+= Version 1.9.2.1 =
+* Added check for wp-load.php before attempting ajax comments. Should fix WP comment posting issues. Working on better Disqus and Intense Debate support as well
+* Removed 'Find in this page' button, until bugs are resolved
+* Now WPtouch will not hide mobileSafari addressbar on single post pages, for readers on slower connections (page won't awkwardly bump them to the top when reading an article)
+
+
+= Version 1.9.2 =
+* Fixed bug where WPtouch admin would report that CURL wasn't installed even if it was
+
+
+= Version 1.9.1 =
+* Fixed bug for admin panel Ajax not working in some situations
+* Adsense re-enabled
+* Fixed bug where SPAM comments were pushed via Prowl
+* Push Notification options now announces if Curl is not available, instead of not appearing at all
+* Removed text-size adjust option, now replaced with user-adjustable font sizes
+* Minor code corrections
+
+
+= Version 1.9 =
+* Fully compatible with WordPress 2.6 - 2.8.x
+* Major rewrites of theme files, css for simplicity, CoreTheme
+* Adsense has been temporarily disabled until we update code for new Google API changes
+* Added experimental support for Opera Mini & Palm Pre mobile browsers
+* Added filter trackbacks and pingbacks from display in comment counts
+* Added friendly 'noscript' display bezel for users with javascript Turned off
+* Added support for Prowl Push notifications for comments, user registrations, and direct messages (if Curl exists on the server)
+* Added ability to exclude categories
+* Added native select for Tags
+* Added theme switch confirm message, saves a cookie to not repeat
+* Added jQuery color picker in admin hex areas for easy selections
+* Added link to online icon generator in admin
+* Added style declaration for images in comments
+* Added 'My Account' button in the sub//header for logged in users replacing 'Logout'
+* Added theme skin selection support, still no other skins enabled yet
+* Added post-options bar on single post page
+* Added new background selections
+* Updated plugin compatibility listing now loads from bravenewcode.com
+* Updated style for comments, working on full support for WP 2.7 comments, Intense Debate
+* Updated success message for ajax comments
+* Updated font zoom replaced by font-size adjust button
+* Updated ajax upload script to v3.1
+* Updated fancybox to compressed v1.2.1
+* Updated Ajax Upload script to 3.2
+* Updated compatibility code (Various WordPress install scenarios) ~ thanks to Will Norris for the suggestions
+* Updated a check if comments are open before showing the comments link
+* Updated local jquery in exclusive mode to use WP, not Google
+* Updated admin style and design
+* Updated search now floats overtop the headerbar
+* Updated the_content_rss() for excerpts, created a custom function which handles it nicely
+* Updated several images in the core images folder, building more dependency on CoreTheme
+* Removed support for WordPress 2.3, lowest known WordPress version supported: 2.6
+* Removed 404 image with English text in it, replaced it with localized 404 text
+* Removed depreciated or unused functions from previous releases
+* Removed ability to disable jQuery; WPtouch Exclusive mode should fix JS issues
+* Fixed home link in menu drop down now respects the logo/bookmark icon choice
+* Fixed WP Spam Free users having had new comments blocked
+* Fixed WPtouch appearing zoomed out and wide
+* Fixed custom page icons not showing up on pages
+* Fixed some domains not showing the beta download/news areas
+* Fixed style issue for icons on pages
+* Fixed the way javascript is called for a elements, should work better in other mobile browsers
+* Fixed switch link issue where regular theme switch link was broken
+* Fixed issue where chosen pages and icons did not appear in the drop down
+* Fixed a variety of scenarios where paths to files and images were broken
+* Fixed a few areas that had text not yet localized, improperly coded
+* More preparation for languages support
+* Preparation for WPtouch 2.0 and themes support (based on CoreTheme)
+* Other minor optimizations, fixes, changes
+
+
+(Here's the complete changelog for past versions)
+
+= Version 1.8.9.1 =
 
 * Fixed refresh issue (some pages keep re-loading)
 * Fixed mkdir issue on PHP4 installations
@@ -46,17 +123,14 @@ You can also checkout our Support Forums at http://support.bravenewcode.com to p
 * Added exclusive mode feature to help in situations where other plugins are incompatible, load too many scripts/css files and both break and slow down WPtouch
 * Added Fancybox for some feature descriptions in the admin
 
-= Versions 1.8 to 1.8.7: =
+= Versions 1.8.1 to 1.8.8 =
 
 * Changed calendar icons from images to CSS-based only (they look sexay!)
 * Refined styling of header logo, text shadow, general appearance
 * Removed unneeded declarations from the WPtouch stylesheet
 * Tested and works efficiently with WordPress MU when installed site-wide (Finally!)
-* Please read the details in this readme regarding use on WordPress MU
 * Disqus commenting plugins out-of-the-box styling enhancements
 * Changed post nav on the single post page to prev/next post, instead of entry titles for length's sake
-* We're working on IntenseDebate plugin support, should be out with the next revision
-* Added javascript to support framesets and screen size detection
 * Fixed bug related to RSS feeds being broken in some situations
 * Fixed fatal error on line 153 undefined 'is_front_page' function for WP 2.3.x users
 * Fixed jQuery failing to load for WP 2.3.x users
@@ -74,7 +148,7 @@ You can also checkout our Support Forums at http://support.bravenewcode.com to p
 * Fixed path issues related to custom icons (sites on windows servers)
 * Fixed issues related to ajax comments not working in some situations
 * Added check for 'Allow Comments' on pages
-* Fixed hidden Apache error (reported in logs)
+* Fixed Apache error (reported in logs)
 * Fixed admin styling issues on IE7, Firefox
 * Fixed issue with custom icons and the header logo
 * Fixed issue with the Classic background not appearing
@@ -97,7 +171,6 @@ You can also checkout our Support Forums at http://support.bravenewcode.com to p
 * Fixed issue with default icon case
 * Fixed issue with switch code on systems with PHP4
 * Fixed issue related to fresh installs
-* Fixed issue with pre 2.7 versions of WordPress admin
 * Fixed issue with Android and the sub-header menu links not working
 
 
@@ -225,10 +298,15 @@ You can also checkout our Support Forums at http://support.bravenewcode.com to p
 * bug fixes for blogs installed in directories other than root
 
 
+= Version 1.0 = 
+
+* Initial release
+
+
 == Installation ==
 
-= Pre 2.7 =
-Download, unzip, and upload the 'wptouch' folder and all its contents to your WordPress wp-content/plugins folder using FTP. Visit the plugin tab in the WordPress admin, and activate *WPtouch*. You can then setup your plugin options by visiting the Settings - >WPtouch tab.
+= 2.6 =
+Download, unzip, and upload the 'wptouch' folder and all its contents to your WordPress wp-content/plugins folder using FTP. Visit the plugin tab in the WordPress admin, and activate *WPtouch*. You can then setup your plugin options by visiting the *Settings - >WPtouch* tab.
 
 = 2.7+ =
 You can now install *WPtouch* directly from the WordPress admin!
@@ -250,22 +328,20 @@ Yes, that's true for the most part. However, not all websites are created equal,
 
 = Well, what if my users don't like it and want to see my regular site? =
 
-There's a mobile switch option in the footer on *WPtouch* for your users to easily switch between the *WPtouch* view and your site's regular appearance. It's that easy. We even automatically put a little snippet of code into your current theme which will be shown only to iPhone/iPod/Android visitors, giving them control to switch between the two site themes easily.
+There's a mobile switch option in the footer on *WPtouch* for your users to easily switch between the *WPtouch* view and your site's regular appearance. It's that easy. We even automatically put a little snippet of code into your current theme which will be shown only to iPhone, iPod touch, Android or BlackBerry touch mobile device visitors, giving them control to switch between the two site themes easily.
 
 = Will it slow down my blog, or increase my server load? =
 
-Not bloody likely! Unless of course you're getting slammed with all sorts of traffic because you've installed this sexy thang. The entire theme files package for *WPtouch* is small (300kb or so without the screenshots). It was designed to be as lightweight and speedy as possible, while still serving your site's content in a richly presented way, sparing no essential features like search, login, categories, tags, comments etc.
+Not bloody likely! Unless of course you're getting slammed with all sorts of traffic because you've installed this sexy thang. The entire theme files package for *WPtouch* is small. It was designed to be as lightweight and speedy as possible, while still serving your site's content in a richly presented way, sparing no essential features like search, login, categories, tags, comments etc.
 
 == Screenshots ==
 
 1. Posts on the front page
 2. Drop down menu navigation
-3. Single post page w/ YouTube video
-4. Post meta data, mail, social bookmarking and navigation
-5. Comment box (ajax powered)
-6. Links with automatic favicon support
-7. Archives page with tag cloud & monthly list 
-8. Sample post with image auto-size
-9. Built-in 'e-mail post' capability
-10. WordPress Photo Gallery & Post Nav Support
-11. Theme switch link appearance
+3. Push Messaging
+4. iPhone native select support for tags & categories
+5. Single post page post meta, options bar, comments
+6. Ajax comment form
+7. Switch link in the footer
+8. Archives page appearance (auto-generated if you have a page called 'Archives')
+9. Sample regular page

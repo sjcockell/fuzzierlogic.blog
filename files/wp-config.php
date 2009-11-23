@@ -1,4 +1,5 @@
 <?php
+define('TANTAN_DISPLAY_LIBRARY', 'lightbox');
 // ** MySQL settings ** //
 define('DB_NAME', 'fuzzierlogic_wp');    // The name of the database
 define('DB_USER', 'wordpress');     // Your MySQL username

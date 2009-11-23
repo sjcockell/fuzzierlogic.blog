@@ -7,7 +7,7 @@
 
 /*
 Plugin Name: Insights
-Version: 1.0.1
+Version: 1.0.2
 Plugin URI: http://www.prelovac.com/vladimir/wordpress-plugins/insights
 Author: Vladimir Prelovac
 Author URI: http://www.prelovac.com/vladimir

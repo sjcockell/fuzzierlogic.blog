@@ -1,69 +1,133 @@
 <?php 
+include( dirname(__FILE__) . '/../core/core-functions.php' ); 
+// End WPtouch Core Functions
 
-// This checks to see if advanced JS is enabled in the WPtouch admin and then loads jQuery without collisions if possible (2.5 or higher)
-function wptouch_enqueue() {
-	$version = get_bloginfo('version'); 
-		if ($version >= 2.5 && bnc_is_js_enabled() && !bnc_wptouch_is_exclusive() ) { 
-			echo	 '' . wp_enqueue_script('jquery') . '';
-		} elseif (bnc_is_js_enabled()) { 
-			echo '<script src="http://www.google.com/jsapi"></script>';
-			echo '<script type="text/javascript">google.load("jquery", "1");</script>';
+//---------------- Custom Drop-Down Tags Function ----------------// 
+function dropdown_tag_cloud( $args = '' ) {
+	$defaults = array(
+		'smallest' => 8, 'largest' => 22, 'unit' => 'pt', 'number' => 45,
+		'format' => 'flat', 'orderby' => 'name', 'order' => 'ASC',
+		'exclude' => '', 'include' => ''
+	);
+	$args = wp_parse_args( $args, $defaults );
+
+	$tags = get_tags( array_merge($args, array('orderby' => 'count', 'order' => 'DESC')) ); // Always query top tags
+
+	if ( empty($tags) )
+		return;
+
+	$return = core_header_tag_cloud( $tags, $args ); // Here's where those top tags get sorted according to $args
+	if ( is_wp_error( $return ) )
+		return false;
+	else
+		echo apply_filters( 'dropdown_tag_cloud', $return, $args );
+}
+
+function core_header_tag_cloud( $tags, $args = '' ) {
+	global $wp_rewrite;
+	$defaults = array(
+		'smallest' => 8, 'largest' => 22, 'unit' => 'pt', 'number' => 45,
+		'format' => 'flat', 'orderby' => 'name', 'order' => 'ASC'
+	);
+	$args = wp_parse_args( $args, $defaults );
+	extract($args);
+
+	if ( !$tags )
+		return;
+	$counts = $tag_links = array();
+	foreach ( (array) $tags as $tag ) {
+		$counts[$tag->name] = $tag->count;
+		$tag_links[$tag->name] = get_tag_link( $tag->term_id );
+		if ( is_wp_error( $tag_links[$tag->name] ) )
+			return $tag_links[$tag->name];
+		$tag_ids[$tag->name] = $tag->term_id;
+	}
+
+	$min_count = min($counts);
+	$spread = max($counts) - $min_count;
+	if ( $spread <= 0 )
+		$spread = 1;
+	$font_spread = $largest - $smallest;
+	if ( $font_spread <= 0 )
+		$font_spread = 1;
+	$font_step = $font_spread / $spread;
+
+	// SQL cannot save you; this is a second (potentially different) sort on a subset of data.
+	if ( 'name' == $orderby )
+		uksort($counts, 'strnatcasecmp');
+	else
+		asort($counts);
+
+	if ( 'DESC' == $order )
+		$counts = array_reverse( $counts, true );
+
+	$a = array();
+
+	$rel = ( is_object($wp_rewrite) && $wp_rewrite->using_permalinks() ) ? ' rel="tag"' : '';
+
+	foreach ( $counts as $tag => $count ) {
+		$tag_id = $tag_ids[$tag];
+		$tag_link = clean_url($tag_links[$tag]);
+		$tag = str_replace(' ', '&nbsp;', wp_specialchars( $tag ));
+		$a[] = "\t<option value='$tag_link'>$tag ($count)</option>";
+	}
+
+	switch ( $format ) :
+	case 'array' :
+		$return =& $a;
+		break;
+	case 'list' :
+		$return = "<ul class='wp-tag-cloud'>\n\t<li>";
+		$return .= join("</li>\n\t<li>", $a);
+		$return .= "</li>\n</ul>\n";
+		break;
+	default :
+		$return = join("\n", $a);
+		break;
+	endswitch;
+
+	return apply_filters( 'core_header_tag_cloud', $return, $tags, $args );
+}
+
+//---------------- Custom Exclude Cats Function ----------------//
+function exclude_category($query) {
+$cats = wptouch_excluded_cats();
+$icats = explode( ",", $cats );
+$new_cats = array();
+foreach( $icats as $icat ) {
+	$new_cats[] = "-" . $icat;
+}
+$cats = implode( ",",  $new_cats );
+
+if ( $query->is_home ) {
+$query->set('cat', $cats);
+}
+return $query;
+}
+add_filter('pre_get_posts', 'exclude_category');
+
+
+//---------------- Custom Excerpts Function ----------------//
+function wptouch_trim_excerpt($text) {
+	$raw_excerpt = $text;
+	if ( '' == $text ) {
+		$text = get_the_content('');
+		$text = strip_shortcodes( $text );
+		$text = apply_filters('the_content', $text);
+		$text = str_replace(']]>', ']]&gt;', $text);
+		$text = strip_tags($text);
+		$excerpt_length = apply_filters('excerpt_length', 30);
+		$words = explode(' ', $text, $excerpt_length + 1);
+		if (count($words) > $excerpt_length) {
+			array_pop($words);
+			array_push($words, '...');
+			$text = implode(' ', $words);
+			$text = force_balance_tags( $text );
 		}
+	}
+	return apply_filters('wptouch_trim_excerpt', $text, $raw_excerpt);
 }
-//Favicon fetch and convert script // This script will convert favicons for the links listed on your Links page (if you have one).
-  function bnc_url_exists($url)
-  {
-// Version 4.x supported
-      $handle = curl_init($url);
-      if (false === $handle) {
-          return false;
-      }
-      curl_setopt($handle, CURLOPT_HEADER, false);
-      // this works
-      curl_setopt($handle, CURLOPT_FAILONERROR, true);
-      curl_setopt($handle, CURLOPT_NOBODY, true);
-      curl_setopt($handle, CURLOPT_RETURNTRANSFER, false);
-      curl_setopt($handle, CURLOPT_TIMEOUT, 1);
-      $connectable = curl_exec($handle);
-      $d = curl_getinfo($handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-      return($d > 0);
-  }
-  function bnc_get_ico_file($ico)
-  {
-      $d = file_get_contents($ico);
-      if (!file_exists(bnc_get_local_dir() . '/cache')) {
-          mkdir(bnc_get_local_dir() . '/cache', 0755);
-      }
-      file_put_contents(bnc_get_local_dir() . '/cache/' . md5($ico) . '.ico', $d);
-      exec('sh convert ico:' . bnc_get_local_dir() . '/cache/' . md5($ico) . '.ico' . bnc_get_local_dir() . '/cache/' . md5($ico) . '.png');
-  }
-  function bnc_get_local_dir()
-  {
-      $dir = preg_split("#/plugins/wptouch/images/icon-pool/#", __FILE__, $test);
-      return $dir[0] . '/plugins/wptouch/images/icon-pool';
-  }
-  function bnc_get_local_icon_url()
-  {
-      return get_bloginfo('wpurl') . '/wp-content/plugins/wptouch/images/';
-  }
-  function bnc_get_favicon_for_site($site)
-  {
-// Yes we know this goes remote to handle things, but we do this to ensure that it works for everyone. No data is collected, as you'll see if you look at the script.
-      $i = 'http://www.bravenewcode.com/code/favicon.php?site=' . urlencode($site) . '&default=' . urlencode(bnc_get_local_icon_url() . '/icon-pool/default.png');
-      return $i;
-  }
 
-$bnc_start_content = '[gallery]';
-$bnc_end_content = '';
-
-add_filter('the_content_rss', 'rename_content');
-
-function rename_content($content) {
-   global $bnc_start_content;
-   global $bnc_end_content;
-
-   $content = str_replace($bnc_start_content, $bnc_end_content, $content);
-
-   return $content;
-}
+remove_filter('get_the_excerpt', 'wp_trim_excerpt');
+add_filter('get_the_excerpt', 'wptouch_trim_excerpt');
 ?>

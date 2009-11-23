@@ -1,7 +1,7 @@
 <?php
 /*
  
- $Id: sitemap-core.php 82176 2008-12-24 04:25:18Z arnee $
+ $Id: sitemap-core.php 150610 2009-08-30 21:11:36Z arnee $
 
 */
 
@@ -384,8 +384,8 @@ class GoogleSitemapGeneratorStatus {
 		list($usec, $sec) = explode(" ", microtime());
 		return ((float)$usec + (float)$sec);
 	}
-}
-
+		}
+		
 /**
  * Represents an item in the page list
  * @author Arne Brachhold
@@ -863,7 +863,7 @@ class GoogleSitemapGenerator {
 	/**
 	 * @var Version of the generator in SVN
 	*/
-	var $_svnVersion = '$Id: sitemap-core.php 82176 2008-12-24 04:25:18Z arnee $';
+	var $_svnVersion = '$Id: sitemap-core.php 150610 2009-08-30 21:11:36Z arnee $';
 	
 	/**
 	 * @var array The unserialized array with the stored options
@@ -990,12 +990,15 @@ class GoogleSitemapGenerator {
 	 * @since 3.0b5
 	 * @access private
 	 * @author Arne Brachhold
-	 * @return string The URL to the default stylesheet, empry string if not available.
+	 * @return string The URL to the default stylesheet, empty string if not available.
 	 */
 	function GetDefaultStyle() {
 		$p = $this->GetPluginPath();
 		if(file_exists($p . "sitemap.xsl")) {
-			return $this->GetPluginUrl() . 'sitemap.xsl';
+			$url = $this->GetPluginUrl();
+			//If called over the admin area using HTTPS, the stylesheet would also be https url, even if the blog frontend is not.
+			if(substr(get_bloginfo('url'),0,5) !="https" && substr($url,0,5)=="https") $url="http" . substr($url,5);
+			return $url . 'sitemap.xsl';
 		}
 		return '';
 	}
@@ -1045,6 +1048,7 @@ class GoogleSitemapGenerator {
 		$this->_options["sm_in_arch"]=false;				//Include archives
 		$this->_options["sm_in_auth"]=false;				//Include author pages
 		$this->_options["sm_in_tags"]=false;				//Include tag pages
+		$this->_options["sm_in_lastmod"]=true;				//Include the last modification date
 
 		$this->_options["sm_cf_home"]="daily";				//Change frequency of the homepage
 		$this->_options["sm_cf_posts"]="monthly";			//Change frequency of posts
@@ -1581,8 +1585,10 @@ class GoogleSitemapGenerator {
 	 * @see AddElement
 	 * @return string The URL node
 	 */
-	function AddUrl($loc,$lastMod=0,$changeFreq="monthly",$priority=0.5) {
-		$page = new GoogleSitemapGeneratorPage($loc,$priority,$changeFreq,$lastMod);
+	function AddUrl($loc, $lastMod = 0, $changeFreq = "monthly", $priority = 0.5) {
+		//Strip out the last modification time if activated
+		if($this->GetOption('in_lastmod')===false) $lastMod = 0;
+		$page = new GoogleSitemapGeneratorPage($loc, $priority, $changeFreq, $lastMod);
 		
 		$this->AddElement($page);
 	}
@@ -1742,9 +1748,20 @@ class GoogleSitemapGenerator {
 		
 		$home = get_bloginfo('url');
 		
+		$homePid = 0;
+		
 		//Add the home page (WITH a slash!)
 		if($this->GetOption("in_home")) {
-			$this->AddUrl(trailingslashit($home),$this->GetTimestampFromMySql(get_lastpostmodified('GMT')),$this->GetOption("cf_home"),$this->GetOption("pr_home"));
+			if('page' == get_option('show_on_front') && get_option('page_on_front')) {
+				$pageOnFront = get_option('page_on_front');
+				$p = get_page($pageOnFront);
+				if($p) {
+					$homePid = $p->ID;
+					$this->AddUrl(trailingslashit($home),$this->GetTimestampFromMySql(($p->post_modified_gmt && $p->post_modified_gmt!='0000-00-00 00:00:00'?$p->post_modified_gmt:$p->post_date_gmt)),$this->GetOption("cf_home"),$this->GetOption("pr_home"));
+				}
+			} else {
+				$this->AddUrl(trailingslashit($home),$this->GetTimestampFromMySql(get_lastpostmodified('GMT')),$this->GetOption("cf_home"),$this->GetOption("pr_home"));
+			}
 		}
 		
 		//Add the posts
@@ -1754,6 +1771,8 @@ class GoogleSitemapGenerator {
 		
 			//Pre 2.1 compatibility. 2.1 introduced 'future' as post_status so we don't need to check post_date
 			$wpCompat = (floatval($wp_version) < 2.1);
+			
+			$useQTransLate = false; //function_exists('qtrans_convertURL') && function_exists('qtrans_getEnabledLanguages'); Not really working yet
 			
 			$excludes = $this->GetOption('b_exclude'); //Excluded posts
 			
@@ -1768,8 +1787,7 @@ class GoogleSitemapGenerator {
 				}
 			}
 			
-			$useQTransLate = false; //function_exists('qtrans_convertURL') && function_exists('qtrans_getEnabledLanguages'); Not ready yet
-			
+	
 			$contentStmt = '';
 			if($useQTransLate) {
 				$contentStmt.=', post_content ';
@@ -1886,16 +1904,19 @@ class GoogleSitemapGenerator {
 				
 				$minPrio=$this->GetOption('pr_posts_min');
 				
-				
+			
 				//Cycle through all posts and add them
 				while($post = mysql_fetch_object($postRes)) {
 				
 					//Fill the cache with our DB result. Since it's incomplete (no text-content for example), we will clean it later.
 					$cache = array(&$post);
 					update_post_cache($cache);
+					
+					//Set the current working post for other plugins which depend on "the loop"
+					$GLOBALS['post'] = &$post;
 				
 					$permalink = get_permalink($post->ID);
-					if($permalink != $home) {
+					if($permalink != $home && $post->ID != $homePid) {
 								
 						$isPage = false;
 						if($wpCompat) {
@@ -1904,8 +1925,6 @@ class GoogleSitemapGenerator {
 							$isPage = ($post->post_type == 'page');
 						}
 						
-						//Set the current working post
-						$GLOBALS['post'] = &$post;
 					
 						//Default Priority if auto calc is disabled
 						$prio = 0;
@@ -1937,11 +1956,11 @@ class GoogleSitemapGenerator {
 						
 						if($inSubPages) {
 							$subPage = '';
-							for($p =1; $p<=$post->postPages; $p++) {
+							for($p = 1; $p <= $post->postPages; $p++) {
 								if(get_option('permalink_structure') == '') {
-									$subPage = $permalink . '&amp;page=' . $p;
+									$subPage = $permalink . '&amp;page=' . ($p+1);
 								} else {
-									$subPage = trailingslashit($permalink) . user_trailingslashit($p, 'single_paged');
+									$subPage = trailingslashit($permalink) . user_trailingslashit($p+1, 'single_paged');
 								}
 
 								$this->AddUrl($subPage,$this->GetTimestampFromMySql(($post->post_modified_gmt && $post->post_modified_gmt!='0000-00-00 00:00:00'?$post->post_modified_gmt:$post->post_date_gmt)),($isPage?$cf_pages:$cf_posts),$prio);
@@ -1992,6 +2011,9 @@ class GoogleSitemapGenerator {
 		if($this->GetOption("in_cats")) {
 			if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: Start Cats"));
 			
+			$exclCats = $this->GetOption("b_exclude_cats"); // Excluded cats
+			if($exclCats == null) $exclCats=array();
+						
 			if(!$this->IsTaxonomySupported()) {
 			
 				$catsRes=$wpdb->get_results("
@@ -2012,7 +2034,7 @@ class GoogleSitemapGenerator {
 							");
 				if($catsRes) {
 					foreach($catsRes as $cat) {
-						if($cat && $cat->ID && $cat->ID>0) {
+						if($cat && $cat->ID && $cat->ID>0 && !in_array($cat->ID, $exclCats)) {
 							if($debug) if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Cat-ID:" . $cat->ID));
 							$this->AddUrl(get_category_link($cat->ID),$this->GetTimestampFromMySql($cat->last_mod),$this->GetOption("cf_cats"),$this->GetOption("pr_cats"));
 						}
@@ -2022,7 +2044,7 @@ class GoogleSitemapGenerator {
 				$cats = get_terms("category",array("hide_empty"=>true,"hierarchical"=>false));
 				if($cats && is_array($cats) && count($cats)>0) {
 					foreach($cats AS $cat) {
-						$this->AddUrl(get_category_link($cat->term_id),0,$this->GetOption("cf_cats"),$this->GetOption("pr_cats"));
+						if(!in_array($cat->term_id, $exclCats)) $this->AddUrl(get_category_link($cat->term_id),0,$this->GetOption("cf_cats"),$this->GetOption("pr_cats"));
 					}
 				}
 			}
@@ -2182,6 +2204,7 @@ class GoogleSitemapGenerator {
 									  
 			if($pingres==NULL || $pingres===false) {
 				$status->EndGooglePing(false,$this->_lastError);
+				trigger_error("Failed to ping Google: " . htmlspecialchars(strip_tags($pingres)),E_USER_NOTICE);
 			} else {
 				$status->EndGooglePing(true);
 			}
@@ -2195,6 +2218,7 @@ class GoogleSitemapGenerator {
 									  
 			if($pingres==NULL || $pingres===false || strpos($pingres,"successfully received and added")===false) { //Ask.com returns 200 OK even if there was an error, so we need to check the content.
 				$status->EndAskPing(false,$this->_lastError);
+				trigger_error("Failed to ping Ask.com: " . htmlspecialchars(strip_tags($pingres)),E_USER_NOTICE);
 			} else {
 				$status->EndAskPing(true);
 			}
@@ -2207,19 +2231,21 @@ class GoogleSitemapGenerator {
 			$pingres=$this->RemoteOpen($sPingUrl);
 
 			if($pingres==NULL || $pingres===false || strpos(strtolower($pingres),"success")===false) {
+				trigger_error("Failed to ping YAHOO: " . htmlspecialchars(strip_tags($pingres)),E_USER_NOTICE);
 				$status->EndYahooPing(false,$this->_lastError);
 			} else {
 				$status->EndYahooPing(true);
 			}
 		}
 		
-		//Ping MSN
+		//Ping Bing
 		if($this->GetOption("b_pingmsn") && !empty($pingUrl)) {
-			$sPingUrl="http://webmaster.live.com/ping.aspx?siteMap=" . urlencode($pingUrl);
+			$sPingUrl="http://www.bing.com/webmaster/ping.aspx?siteMap=" . urlencode($pingUrl);
 			$status->StartMsnPing($sPingUrl);
 			$pingres=$this->RemoteOpen($sPingUrl);
 									  
 			if($pingres==NULL || $pingres===false || strpos($pingres,"Thanks for submitting your sitemap")===false) {
+				trigger_error("Failed to ping Bing: " . htmlspecialchars(strip_tags($pingres)),E_USER_NOTICE);
 				$status->EndMsnPing(false,$this->_lastError);
 			} else {
 				$status->EndMsnPing(true);
@@ -2227,7 +2253,7 @@ class GoogleSitemapGenerator {
 		}
 	
 		$status->End();
-
+		
 		
 		$this->_isActive = false;
 	
@@ -2235,26 +2261,56 @@ class GoogleSitemapGenerator {
 		return $status;
 	}
 	
-	function RemoteOpen($url) {
+	function RemoteOpen($url,$method = 'get', $postData = null, $timeout = 10) {
 		global $wp_version;
-		$res = null;
 		
-		//Before WP 2.7, wp_remote_fopen was quite crappy so Snoopy was favoured. For WP 2.7, the new HTTP classes are preferred.
-		if(floatval($wp_version) < 2.7 && file_exists(ABSPATH . 'wp-includes/class-snoopy.php')) {
+		//Before WP 2.7, wp_remote_fopen was quite crappy so Snoopy was favoured.
+		if(floatval($wp_version) < 2.7) {
+			if(!file_exists(ABSPATH . 'wp-includes/class-snoopy.php')) {
+				trigger_error('Snoopy Web Request failed: Snoopy not found.',E_USER_NOTICE);
+				return false; //Hoah?
+			}
+			
 			require_once( ABSPATH . 'wp-includes/class-snoopy.php');
 			
 			$s = new Snoopy();
-			$s->fetch($url);
 			
-			if($s->status == 200) {
-				$res = $s->results;
+			$s->read_timeout = $timeout;
+			
+			if($method == 'get') {
+				$s->fetch($url);
+			} else {
+				$s->submit($url,$postData);
 			}
-		} else {
-			$res = wp_remote_fopen($url);
-		}
-		return $res;
-	}
+			
+			if($s->status != "200") trigger_error('Snoopy Web Request failed: Status: ' . $s->status . "; Content: " . htmlspecialchars($s->results),E_USER_NOTICE);
+			
+			return $s->results;
 	
+		} else {
+			
+			$options = array();
+			$options['timeout'] = $timeout;
+			
+			if($method == 'get') {
+				$response = wp_remote_get( $url, $options );
+			} else {
+				$response = wp_remote_post($url, array_merge($options,array('body'=>$postData)));
+			}
+			
+			if ( is_wp_error( $response ) ) {
+				$errs = $response->get_error_messages();
+				$errs = htmlspecialchars(implode('; ', $errs));
+				trigger_error('WP HTTP API Web Request failed: ' . $errs,E_USER_NOTICE);
+				return false;
+			}
+		
+			return $response['body'];
+		}
+		
+		return false;
+	}
+
 	/**
 	 * Tracks the last error (gets called by PHP)
 	 *
@@ -2294,8 +2350,10 @@ class GoogleSitemapGenerator {
 	function HtmlGetPriorityValues($currentVal) {
 		$currentVal=(float) $currentVal;
 		for($i=0.0; $i<=1.0; $i+=0.1) {
-			echo "<option value=\"$i\" " . $this->HtmlGetSelected("$i","$currentVal") .">";
-			_e(strval($i));
+			$v = number_format($i,1,".","");
+			$t = number_format_i18n($i,1);
+			echo "<option value=\"" . $v . "\" " . $this->HtmlGetSelected("$i","$currentVal") .">";
+			echo $t;
 			echo "</option>";
 		}
 	}
@@ -2369,7 +2427,6 @@ class GoogleSitemapGenerator {
 
 		//Array where the new pages are stored
 		$pages=array();
-		
 		//Loop through all defined pages and set their properties into an object
 		if(isset($_POST["sm_pages_mark"]) && is_array($_POST["sm_pages_mark"])) {
 			for($i=0; $i<count($_POST["sm_pages_mark"]); $i++) {
@@ -2383,11 +2440,11 @@ class GoogleSitemapGenerator {
 				$lm=(!empty($pages_lm[$i])?strtotime($pages_lm[$i],time()):-1);
 				if($lm===-1) $p->setLastMod(0);
 				else $p->setLastMod($lm);
-				
 				//Add it to the array
 				array_push($pages,$p);
 			}
 		}
+
 		return $pages;
 	}
 	
@@ -2395,12 +2452,7 @@ class GoogleSitemapGenerator {
 		list($date, $hours) = split(' ', $mysqlDateTime);
 		list($year,$month,$day) = split('-',$date);
 		list($hour,$min,$sec) = split(':',$hours);
-		return mktime($hour, $min, $sec, $month, $day, $year);
-	}
-
-	
-	function GetResourceLink($resourceID) {
-		return trailingslashit(get_bloginfo('siteurl')) . '?res=' . $resourceID;
+		return mktime(intval($hour), intval($min), intval($sec), intval($month), intval($day), intval($year));
 	}
 	
 	function GetRedirectLink($redir) {
@@ -2417,14 +2469,6 @@ class GoogleSitemapGenerator {
 		else return $_SERVER['PHP_SELF'] . "?page=" .  $page;
 	}
 	
-	function HtmlRegScripts() {
-		$ui = $this->GetUI();
-		if($ui) {
-			$ui->HtmlRegScripts();
-			return true;
-		}
-	}
-	
 	function HtmlShowOptionsPage() {
 		
 		$ui = $this->GetUI();
@@ -2439,7 +2483,7 @@ class GoogleSitemapGenerator {
 	var $_ui = null;
 	
 	function GetUI() {
-		
+
 		global $wp_version;
 		
 		if($this->_ui === null) {
