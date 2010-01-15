@@ -1,0 +1,190 @@
+/* @override http://24.36.119.184:9098/wp-content/plugins/wptouch/themes/core/core-css/sunkissed.css */
+
+/* WPtouch Sunkissed Styles */
+
+/* @group General */
+
+.sunkissed-wptouch-bg {
+	background: url(sunkissed/sunkissed.png) repeat;
+}
+
+.post, #wptouch-switch-link, .navigation, #bookmark-box, .comwrap, input#author, input#email, input#url, textarea#comment, form#commentform input#submit {
+	background-color: #fde8fd	!important;;
+	border: 1px solid #7a759d	!important;;
+}
+
+#footer {
+	text-align: center;
+	color: #ccaad2;
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: #14361b 0 -1px 0;
+	padding-bottom: 10px;
+	margin-top: 50px;
+}
+
+.result-text {
+	color: #ccaad2;
+	text-shadow: #eee 1px 1px 0;
+	font-size: 15px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	letter-spacing: 0;
+	border-style: none;
+}
+
+.result-text-footer {
+	color: #ccaad2;
+	text-shadow: #eee 1px 1px 0;
+	letter-spacing: 0;
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	text-align: center;
+	display: block;
+}
+
+a.ajax {
+	color: #ccaad2;
+	text-shadow: #14361b 0 -1px 0;
+	font-size: 16px;
+	font-weight: bold;
+	margin-right: 10px;
+	letter-spacing: 0;
+}
+
+#wptouch-switch-link a {
+	background: url(sunkissed/on.jpg) no-repeat left top;
+}
+
+/* @end */
+
+/* @group Header Area */
+
+.dropper {
+	border-top: 1px solid #382b3d;
+	font-size: 13px;
+	border-bottom: 3px solid #312635;
+	background-color: #392d46;
+}
+
+.dropper li {
+	border-bottom: 1px solid #2e2530;
+	border-top: 1px solid #4c3256;
+}
+
+.dropper li:last-child {
+	padding-bottom: 9px;
+	border-bottom-width: 0;
+}
+
+.dropper a {
+	text-shadow: #090709 0 -1px 0;
+	color: #fde8fd;
+}
+
+#wptouch-menu-inner a:hover {
+	text-shadow: #2a123c 0 1px 0;
+	color: #fde8fd;
+}
+
+.dropper li:hover {
+	background-color: #462b4a;
+}
+
+#drop-fade {
+	border-top: 1px solid #584270;
+}
+
+#drop-fade a {
+	color: #e6cdfb;
+}
+
+#wptouch-search-inner {
+	border-top: 1px solid #543c57;
+	border-bottom: 1px solid #250d2b;
+	background-color: #5b496e;
+}
+
+/* @end */
+
+/* @group Index */
+
+.spin {
+	background: url(sunkissed/ajax-loader.gif) no-repeat;
+}
+
+a.post-arrow {
+	width: 18px;
+	height: 15px;
+	float: right;
+	margin-top: 1px;
+	padding: 0;
+	background: #ffc5ff url(../core-images/post-arrow.png) no-repeat -1px -2px;
+	border: 1px solid #d4bbde;
+	-webkit-border-radius: 5px;
+}
+
+a.post-arrow-down {
+	width: 18px;
+	height: 15px;
+	float: right;
+	margin-top: 1px;
+	padding: 0;
+	background: #bf99e8 url(../core-images/post-arrow.png) no-repeat -1px -23px;
+	border: 1px solid #cbb3d4;
+	-webkit-border-radius: 5px;
+}
+
+.mainentry a.read-more:hover {
+	background-color: #ffc5ff;
+}
+
+/* @end */
+
+/* @group Single Post */
+
+.navigation .alignleft a {
+	background: url(sunkissed/nav_arrow.png) no-repeat left 0;
+	color: #462b4a;
+}
+
+.navigation .alignright a {
+	background: url(sunkissed/nav_arrow.png) no-repeat right -18px;
+	color: #462b4a;
+}
+
+.single-mail-left {
+	background: url(sunkissed/mailit.png) no-repeat right 1px;
+}
+
+.single-bookmark-right {
+	background: url(sunkissed/bookmarkit.png) no-repeat 0 1px;
+}
+
+.single-mail-left a, .single-bookmark-right a  {
+	color: #462b4a;
+}
+
+.result-text, h3#comments, h3#respond, p label small {
+	color: #fde8fd !important;
+	text-shadow: #1c2521 0 -1px 0  !important;
+}
+
+.single-post-meta-top a {
+	color: #462b4a;
+	
+}
+
+.single-post-meta-bottom {
+	background-color: #dbcafd;
+	text-shadow: #fff 0 1px 0;
+	color: #5f486f;
+	border-top-color: #d4bbde;
+	border-bottom-color: #d6bce0;
+}
+
+
+
+/* @end */

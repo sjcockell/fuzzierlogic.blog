@@ -6,7 +6,10 @@
 		</div>
 	</center>
 	
-	<p><?php _e( "All content Copyright &copy;", "wptouch" ); ?> <?php $str = bnc_get_header_title(); echo stripslashes($str); ?></p>
+	<!--<p><?php _e( "All content Copyright &copy;", "wptouch" ); ?> <?php $str = bnc_get_header_title(); echo stripslashes($str); ?></p>
+	-->
+	<p><?php _e( "All content CC-BY ", "wptouch" ); ?> <?php $str = bnc_get_header_title(); echo stripslashes($str); ?></p>
+	
 	<p><?php _e( 'Powered by', 'wptouch' ); ?> <a href="http://www.wordpress.org/">WordPress <?php bloginfo('version'); ?></a> <?php _e( '+', 'wptouch' ); ?> <a href="http://www.wptouch.com"><?php WPtouch(); ?></a></p>
 	<?php if ( !bnc_wptouch_is_exclusive() ) { wp_footer(); } ?>
 </div>

@@ -1,0 +1,297 @@
+/* @override 
+	http://wptouch.com/wp-content/plugins/wptouch/themes/core/core-css/frog.css
+*/
+
+/* WPtouch Froggy Styles */
+
+/* @group General */
+
+.classic-wptouch-bg, .argyle-wptouch-bg, .horizontal-wptouch-bg, .diagonal-wptouch-bg, .skated-wptouch-bg, .grid-wptouch-bg {
+	background: url(frog/frog.png) repeat;
+}
+
+.post, #wptouch-switch-link, .navigation, #bookmark-box, input#author, input#email, input#url, textarea#comment, form#commentform input#submit {
+	background-color: #f0fee7		 	!important;
+	border: 1px solid #639e43 		 	!important;
+}
+
+#footer {
+	text-align: center;
+	color: #fff;
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: #14361b 0 -1px 1px;
+	padding-bottom: 10px;
+	margin-top: 50px;
+}
+
+#footer a {
+	color: #a1dcab !important;
+;
+	
+}
+
+.result-text {
+	color: #fff !important;
+	text-shadow: #eee 1px 1px 0;
+	font-size: 15px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	letter-spacing: 0;
+	border-style: none;
+}
+
+.result-text-footer {
+	color: #fff !important;
+	text-shadow: #eee 1px 1px 0;
+	letter-spacing: 0;
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	text-align: center;
+	display: block;
+}
+
+a.ajax {
+	color: #fff !important;
+	text-shadow: #14361b 0 -1px 0;
+	font-size: 16px;
+	font-weight: bold;
+	margin-right: 10px;
+	letter-spacing: 0;
+}
+
+#wptouch-switch-link a {
+	background: url(frog/on.jpg) no-repeat left top;
+}
+
+/* @end */
+
+/* @group Override Defaults */
+
+a.h2 {
+	color: #012d00 !important;
+}
+
+#headerbar, #wptouch-login {
+	background-color: #002302 !important;
+}
+
+#headerbar-title, #headerbar-title a {
+	color: #e7fad6 !important;
+}
+
+#wptouch-menu-inner a:hover {
+	color: #a3ffb0 !important;
+}
+
+#catsmenu-inner a:hover {
+	color: #8effa6 !important;
+}
+
+#drop-fade {
+	background-color: #012d00 !important;
+}
+
+#drop-fade a {
+	color: #edfeca !important;
+}
+
+a, h3#com-head {
+	color: #39794d !important;
+}
+
+
+/* @end */
+
+/* @group Header Area */
+
+.dropper {
+	border-top: 1px solid #395630;
+	font-size: 13px;
+	background-color: #1e2b1b;
+	border-bottom: 3px solid #0f220f;
+}
+
+.dropper li {
+	border-bottom: 1px solid #161b18;
+	border-top: 1px solid #2c3429;
+}
+
+.dropper a {
+	text-shadow: #0c110a 0 -1px 1px;
+	color: #e7fad6 !important;
+}
+
+#wptouch-menu-inner a:hover {
+	color: #38473d					 !important;
+	text-shadow: #b2c88f 0 1px 0;
+}
+
+.dropper li:hover {
+	background-color: #769555;
+}
+
+#drop-fade {
+	border-top: 1px solid #353f37;
+}
+
+#drop-fade a {
+	color: #fdf2a5;
+}
+
+#wptouch-search-inner {
+	border-top: 1px solid #56784f;
+	border-bottom: 1px solid #1e2b1c;
+	background-color: #33472b;
+}
+
+/* @end */
+
+/* @group Index */
+
+.spin {
+	background: url(frog/ajax-loader.gif) no-repeat;
+}
+
+a.post-arrow {
+	width: 18px;
+	height: 15px;
+	float: right;
+	margin-top: 1px;
+	padding: 0;
+	background: #cffbbf url(../core-images/post-arrow.png) no-repeat -1px -2px;
+	border: 1px solid #96c3a0;
+	-webkit-border-radius: 5px;
+}
+
+a.post-arrow-down {
+	width: 18px;
+	height: 15px;
+	float: right;
+	margin-top: 1px;
+	padding: 0;
+	background: #bde88a url(../core-images/post-arrow.png) no-repeat -1px -23px;
+	border: 1px solid #b8b8b8;
+	-webkit-border-radius: 5px;
+}
+
+.mainentry a.read-more:hover {
+	background-color: #a3db85;
+}
+
+/* @end */
+
+/* @group Single Post */
+
+.navigation .alignleft a {
+	background: url(frog/nav_arrow.png) no-repeat left 0;
+	color: #39794d;
+}
+
+.navigation .alignright a {
+	background: url(frog/nav_arrow.png) no-repeat right -18px;
+	color: #39794d;
+}
+
+.single-mail-left {
+	background: url(frog/mailit.png) no-repeat 101% -1px;
+}
+
+.single-bookmark-right {
+	background: url(frog/bookmarkit.png) no-repeat 0 -1px;
+}
+
+.single-mail-left a, .single-bookmark-right a  {
+	color: #39794d;
+}
+
+.result-text, h3#comments, #respond, p label small, p label {
+	color: #fff 	!important;
+	text-shadow: #1c2521 0 -1px 0  	!important;
+}
+
+.single-post-meta-top a {
+	color: #39794d;
+	
+}
+
+.single-post-meta-bottom {
+	background-color: #eefece;
+	text-shadow: #fff 0 1px 0;
+	color: #204a1e;
+	border-top-color: #639e43;
+	border-bottom-color: #639e43;
+}
+
+ol#commentlist li {
+	background-color: #f0fee7;
+}
+
+.comtop {
+	background-color: #d2ffbd;
+}
+
+.comhead-open {
+	background-color: #b9e09d !important;
+}
+
+form#commentform p label, h3#respond {
+	text-shadow: #000000 1px -1px 1px !important;
+}
+
+
+/* @end */
+
+/* @group Cal Month Colors */
+
+.month-01 {
+	background-color: #bdfed2;
+}
+
+.month-02 {
+	background-color: #b8edbe;
+}
+
+.month-03 {
+	background-color: #91e895;
+}
+
+.month-04 {
+	background-color: #5de071;
+}
+
+.month-05 {
+	background-color: #4aa352;
+}
+
+.month-06 {
+	background-color: #529946;
+}
+
+.month-07 {
+	background-color: #49732f;
+}
+
+.month-08 {
+	background-color: #3a633d;
+}
+
+.month-09 {
+	background-color: #225623;
+}
+
+.month-10 {
+	background-color: #11430f;
+}
+
+.month-11 {
+	background-color: #10350e;
+}
+
+.month-12 {
+	background-color: #002b00;
+}
+
+/* @end */

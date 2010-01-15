@@ -1,0 +1,67 @@
+/* @override http://24.36.119.184:9107/wp-content/plugins/wptouch/admin-css/wptouch-admin-pre27.css */
+
+/* Pre 2.7 WPtouch Admin Styles */
+
+#wptouch-theme {
+}
+
+#wptouch-head .postbox {
+}
+
+#wptouch-head #wptouch-head-colour {
+	padding-bottom: 0;
+}
+
+#wptouch-head #wptouch-head-colour #wptouch-head-links li {
+	font-weight: normal;
+	font-style: normal;
+}
+
+#wptouch-head #wptouch-head-colour #wptouch-head-links li a {
+	font-size: 11px;
+}
+
+.postbox h3 {
+	background-color: #d6d6d6;
+	text-shadow: #fff 0 1px 0;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	border-bottom: 1px solid #b9b9b9;
+	display: block;
+}
+
+#wptouch-head .metabox-holder {
+}
+
+.postbox {
+	border: 1px solid #c1cfd1;
+	-webkit-border-radius: 6px;
+	background-color: #fcfcfc;
+	margin-bottom: 35px;
+}
+
+#wptouch-theme ul {
+	padding: 0;
+	margin-top: 15px;
+}
+
+#wptouch-theme input#wptouch-button.button-primary {
+	font-weight: bold;
+	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, sans-serif;
+	margin: 1px;
+	padding: 4px 1% 5px;
+	cursor: pointer;
+}
+
+#wptouch-theme input#wptouch-button.button-primary:hover {
+	border-color: #06669b;
+	color: #004791;
+	background-color: #b3d6ee;
+	text-shadow: #fff 0 1px 0;
+}
+
+#wptouch-theme input#wptouch-button-reset:hover {
+	background-color: #ffdad8;
+	text-shadow: #fff 0 1px 0;
+}#wptouch-theme input#wptouch-button-reset:hover#wptouch-theme input#wptouch-button-reset:hover

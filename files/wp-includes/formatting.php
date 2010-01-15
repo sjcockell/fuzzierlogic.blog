@@ -600,11 +600,44 @@ function remove_accents($string) {
  */
 function sanitize_file_name( $filename ) {
 	$filename_raw = $filename;
-	$special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}");
+	$special_chars = array("?", "[", "]", "/", "\\", "=", "<", ">", ":", ";", ",", "'", "\"", "&", "$", "#", "*", "(", ")", "|", "~", "`", "!", "{", "}", chr(0));
 	$special_chars = apply_filters('sanitize_file_name_chars', $special_chars, $filename_raw);
 	$filename = str_replace($special_chars, '', $filename);
 	$filename = preg_replace('/[\s-]+/', '-', $filename);
 	$filename = trim($filename, '.-_');
+
+	// Split the filename into a base and extension[s]
+	$parts = explode('.', $filename);
+
+	// Return if only one extension
+	if ( count($parts) <= 2 )
+		return apply_filters('sanitize_file_name', $filename, $filename_raw);
+
+	// Process multiple extensions
+	$filename = array_shift($parts);
+	$extension = array_pop($parts);
+	$mimes = get_allowed_mime_types();
+
+	// Loop over any intermediate extensions.  Munge them with a trailing underscore if they are a 2 - 5 character
+	// long alpha string not in the extension whitelist.
+	foreach ( (array) $parts as $part) {
+		$filename .= '.' . $part;
+		
+		if ( preg_match("/^[a-zA-Z]{2,5}\d?$/", $part) ) {
+			$allowed = false;
+			foreach ( $mimes as $ext_preg => $mime_match ) {
+				$ext_preg = '!(^' . $ext_preg . ')$!i';
+				if ( preg_match( $ext_preg, $part ) ) {
+					$allowed = true;
+					break;
+				}
+			}
+			if ( !$allowed )
+				$filename .= '_';
+		}
+	}
+	$filename .= '.' . $extension;
+
 	return apply_filters('sanitize_file_name', $filename, $filename_raw);
 }
 
@@ -1452,18 +1485,20 @@ function wp_iso_descrambler($string) {
  * Returns a date in the GMT equivalent.
  *
  * Requires and returns a date in the Y-m-d H:i:s format. Simply subtracts the
- * value of the 'gmt_offset' option.
+ * value of the 'gmt_offset' option. Return format can be overridden using the
+ * $format parameter
  *
  * @since 1.2.0
  *
  * @uses get_option() to retrieve the the value of 'gmt_offset'.
  * @param string $string The date to be converted.
+ * @param string $format The format string for the returned date (default is Y-m-d H:i:s)
  * @return string GMT version of the date provided.
  */
-function get_gmt_from_date($string) {
+function get_gmt_from_date($string, $format = 'Y-m-d H:i:s') {
 	preg_match('#([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})#', $string, $matches);
 	$string_time = gmmktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
-	$string_gmt = gmdate('Y-m-d H:i:s', $string_time - get_option('gmt_offset') * 3600);
+	$string_gmt = gmdate($format, $string_time - get_option('gmt_offset') * 3600);
 	return $string_gmt;
 }
 
@@ -1471,17 +1506,18 @@ function get_gmt_from_date($string) {
  * Converts a GMT date into the correct format for the blog.
  *
  * Requires and returns in the Y-m-d H:i:s format. Simply adds the value of
- * gmt_offset.
+ * gmt_offset.Return format can be overridden using the $format parameter
  *
  * @since 1.2.0
  *
  * @param string $string The date to be converted.
+ * @param string $format The format string for the returned date (default is Y-m-d H:i:s)
  * @return string Formatted date relative to the GMT offset.
  */
-function get_date_from_gmt($string) {
+function get_date_from_gmt($string, $format = 'Y-m-d H:i:s') {
 	preg_match('#([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2}) ([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})#', $string, $matches);
 	$string_time = gmmktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
-	$string_localtime = gmdate('Y-m-d H:i:s', $string_time + get_option('gmt_offset')*3600);
+	$string_localtime = gmdate($format, $string_time + get_option('gmt_offset')*3600);
 	return $string_localtime;
 }
 
