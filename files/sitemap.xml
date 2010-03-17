@@ -1,8 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://blog.fuzzierlogic.com/wp-content/plugins/google-sitemap-generator/sitemap.xsl"?><!-- generator="wordpress/2.8.6" --><!-- sitemap-generator-url="http://www.arnebrachhold.de" sitemap-generator-version="3.1.6" --><!-- generated-on="January 15, 2010 9:29 am" --><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">	<url>
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="http://blog.fuzzierlogic.com/wp-content/plugins/google-sitemap-generator/sitemap.xsl"?><!-- generator="wordpress/2.9.1" -->
+<!-- sitemap-generator-url="http://www.arnebrachhold.de" sitemap-generator-version="3.2.2" -->
+<!-- generated-on="March 12, 2010 10:19 am" -->
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">	<url>
 		<loc>http://blog.fuzzierlogic.com/</loc>
-		<lastmod>2010-01-15T09:28:39+00:00</lastmod>
+		<lastmod>2010-03-12T10:19:05+00:00</lastmod>
 		<changefreq>daily</changefreq>
 		<priority>1.0</priority>
+	</url>
+	<url>
+		<loc>http://blog.fuzzierlogic.com/archives/339</loc>
+		<lastmod>2010-03-12T10:19:05+00:00</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.2</priority>
+	</url>
+	<url>
+		<loc>http://blog.fuzzierlogic.com/archives/336</loc>
+		<lastmod>2010-02-03T08:42:35+00:00</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.2</priority>
+	</url>
+	<url>
+		<loc>http://blog.fuzzierlogic.com/archives/333</loc>
+		<lastmod>2010-01-21T09:25:45+00:00</lastmod>
+		<changefreq>monthly</changefreq>
+		<priority>0.2</priority>
 	</url>
 	<url>
 		<loc>http://blog.fuzzierlogic.com/archives/322</loc>
