@@ -4,13 +4,16 @@ Contributors: dougal
 Donate link: http://dougal.gunters.org/donate
 Tags: comments, gravatars, gravatar, avatars, avatar, images, personalization
 Requires at least: 2.0.4
-Tested up to: 2.5
-Stable tag: 1.2
+Tested up to: 3.0-alpha
+Stable tag: 1.3
 
 Add Gravatars to your comments without modifying any template files. Just
 activate, and you're done!
 
 == Description ==
+
+This plugin allows you to automatically add Gravatars for commenters to your
+theme, if your theme does not already support them.
 
 According to the Gravatar.com website, Gravatars are Globally Recognized
 Avatars, or an "avatar image that follows you from weblog to weblog
@@ -80,6 +83,12 @@ which is to your liking, you will need to modify the CSS in the span style.
 
 Sorry, but help with CSS styling is beyond the scope of this document. 
 
+= Doesn't WordPress 2.5 have Gravatars built-in? Why do I need Easy Gravatars? =
+Yes, WordPress 2.5 added native support for Gravatars. However, older themes
+don't support them. If you are using a theme which doesn't already support
+adding Gravatars, you either need to modify the templates yourself, or use
+Easy Gravatars to add them automatically for you.
+
 == Credits ==
 
 Based on a code snippet from Matt Mullenweg:
@@ -91,9 +100,13 @@ addresses to lowercase before hashing with MD5:
   http://dpotter.net/Technical/index.php/2007/10/22/integrating-gravatar-support/
 
 == Changelog ==
+= 1.3      2010-01-14 =
+* Tested compatibility up to WordPress 3.0-a
+
+= 1.2      2008-03-06 =
+* When running under WordPress 2.5, use the built-in Gravatar image functions.
 
 = 1.1      2007-11-16 =
-
 * Gravatar images now link to comment author's URL, if provided.
 * Gravatar code now prepended to text instead of appended.
 * Code reorganized. Functions for filters and hooks are now near the actions

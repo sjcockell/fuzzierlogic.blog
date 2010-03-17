@@ -3,10 +3,12 @@
 Plugin Name: Twitter Tools - Bit.ly URLs 
 Plugin URI: http://crowdfavorite.com/wordpress/ 
 Description: Use Bit.ly for URL shortening with Twitter Tools. This plugin relies on Twitter Tools, configure it on the Twitter Tools settings page.
-Version: 2.0 
+Version: 2.1.2 
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */
+
+// Thanks to Porter Maus for his contributions.
 
 // ini_set('display_errors', '1'); ini_set('error_reporting', E_ALL);
 
@@ -17,14 +19,18 @@ if (!defined('PLUGINDIR')) {
 load_plugin_textdomain('twitter-tools-bitly');
 
 define('AKTT_BITLY_API_SHORTEN_URL', 'http://api.bit.ly/shorten');
+define('AKTT_BITLY_API_SHORTEN_URL_JMP', 'http://api.j.mp/shorten');
 define('AKTT_BITLY_API_VERSION', '2.0.1');
 
 function aktt_bitly_shorten_url($url) {
 	$parts = parse_url($url);
-	if ($parts['host'] != 'bit.ly') {
+	if (!in_array($parts['host'], array('j.mp', 'bit.ly'))) {
 		$snoop = get_snoopy();
-		$json = new Services_JSON();
-		$api = AKTT_BITLY_API_SHORTEN_URL.'?version='.AKTT_BITLY_API_VERSION.'&longUrl='.urlencode($url);
+		$api_urls = array(
+			'bitly' => AKTT_BITLY_API_SHORTEN_URL,
+			'jmp' => AKTT_BITLY_API_SHORTEN_URL_JMP,
+		);
+		$api = $api_urls[aktt_bitly_setting('aktt_bitly_api_url')].'?version='.AKTT_BITLY_API_VERSION.'&longUrl='.urlencode($url);
 		$login = get_option('aktt_bitly_api_login');
 		$key = get_option('aktt_bitly_api_key');
 		if (!empty($login) && !empty($key)) {
@@ -32,8 +38,10 @@ function aktt_bitly_shorten_url($url) {
 		}
 		$snoop->agent = 'Twitter Tools http://alexking.org/projects/wordpress';
 		$snoop->fetch($api);
-		$result = $json->decode($snoop->results);
-		$url = $result->results->{$url}->shortUrl;
+		$result = json_decode($snoop->results);
+		if (!empty($result->results->{$url}->shortUrl)) {
+			$url = $result->results->{$url}->shortUrl;
+		}
 	}
 	return $url;
 }
@@ -41,7 +49,7 @@ add_filter('tweet_blog_post_url', 'aktt_bitly_shorten_url');
 
 function aktt_bitly_shorten_tweet($tweet) {
 	if (strpos($tweet->tw_text, 'http') !== false) {
-		preg_match_all('@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $tweet->tw_text, $urls);
+		preg_match_all('$\b(https?|ftp|file)://[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|]$i', $test, $urls);
 		if (isset($urls[0]) && count($urls[0])) {
 			foreach ($urls[0] as $url) {
 // borrowed from WordPress's make_clickable code
@@ -57,17 +65,11 @@ function aktt_bitly_shorten_tweet($tweet) {
 add_filter('aktt_do_tweet', 'aktt_bitly_shorten_tweet');
 
 function aktt_bitly_request_handler() {
-	if (!empty($_GET['cf_action'])) {
-		switch ($_GET['cf_action']) {
-
-		}
-	}
 	if (!empty($_POST['cf_action'])) {
 		switch ($_POST['cf_action']) {
-
 			case 'aktt_bitly_update_settings':
 				aktt_bitly_save_settings();
-				wp_redirect(trailingslashit(get_bloginfo('wpurl')).'wp-admin/options-general.php?page=twitter-tools.php&updated=true');
+				wp_redirect(admin_url('options-general.php?page=twitter-tools.php&updated=true'));
 				die();
 				break;
 		}
@@ -86,6 +88,16 @@ $aktt_bitly_settings = array(
 		'type' => 'string',
 		'label' => __('Bit.ly API key', 'twitter-tools-bitly'),
 		'default' => '',
+		'help' => '',
+	),
+	'aktt_bitly_api_url' => array(
+		'type' => 'select',
+		'label' => __('URL to use', 'twitter-tools-bitly'),
+		'default' => 'bitly',
+		'options' => array(
+			'bitly' => 'bit.ly',
+			'jmp' => 'j.mp',
+		),
 		'help' => '',
 	),
 );
@@ -135,7 +147,7 @@ function aktt_bitly_settings_form() {
 	print('
 <div class="wrap">
 	<h2>'.__('Bit.ly for Twitter Tools', 'twitter-tools-bitly').'</h2>
-	<form id="aktt_bitly_settings_form" name="aktt_bitly_settings_form" action="'.get_bloginfo('wpurl').'/wp-admin/options-general.php" method="post">
+	<form id="aktt_bitly_settings_form" class="aktt" name="aktt_bitly_settings_form" action="'.admin_url('options-general.php').'" method="post">
 		<input type="hidden" name="cf_action" value="aktt_bitly_update_settings" />
 		<fieldset class="options">
 	');
@@ -176,6 +188,7 @@ function aktt_bitly_save_settings() {
 				$value = stripslashes($_POST[$key]);
 				break;
 		}
+		$value = trim($value);
 		update_option($key, $value);
 	}
 }

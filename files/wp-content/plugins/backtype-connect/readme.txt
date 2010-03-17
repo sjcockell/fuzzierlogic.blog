@@ -2,8 +2,8 @@
 Contributors: backtype
 Tags: backtype, comments, twitter, tweets, friendfeed, digg, reddit, conversations
 Requires at least: 2.7
-Tested up to: 2.7.1
-Stable tag: 0.2.4
+Tested up to: 2.8.6
+Stable tag: 0.2.5
 
 The BackType Connect Wordpress plugin lets you show related conversations (from Twitter, Digg, FriendFeed & more) inline with your own comments.
 
@@ -46,7 +46,7 @@ The time it takes for BackType comments to show up on your posts varies &ndash; 
 
 = What versions of Wordpress do you support? =
 
-The plugin was developed and fully tested on Wordpress 2.7.
+The plugin was developed on Wordpress 2.7, but it has been fully tested up to 2.8.6.
 
 = Does the BackType Connect plugin work with third party comment systems? =
 
@@ -84,7 +84,3 @@ BackType Connect launched in early March, 2009 so we haven't connected many conv
 If you're having problems using our plugin, let us know. We're happy to help! You can contact us through [our website](http://www.backtype.com/help).
 
 If you're interested in keeping up-to-date on new releases, subscribe to [our blog](http://blog.backtype.com) or follow @[BackType](http://twitter.com/backtype) on Twitter.
-
-== Special Thanks ==
-
-*   Shannon Whitley for creating [SPIURL](http://spiurl.appspot.com/)

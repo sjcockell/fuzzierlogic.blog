@@ -1,14 +1,13 @@
 <?php
 /*
  * Plugin Name: Easy Gravatars
- * Plugin URI: http://dougal.gunters.org/
+ * Plugin URI: http://dougal.gunters.org/plugins/easy-gravatars
  * Description: Add Gravatars to your comments, without requiring any modifications to your theme files. Just activate, and you're done!
- * Version: 1.2
+ * Version: 1.3
  * License: GPL2
  * Author: Dougal Campbell
  * Author URI: http://dougal.gunters.org/
  * Min WP Version: 2.0.4
- * Max WP Version: 2.5
  */
 
 // Register our activation hook, so we can set our default options:
@@ -140,6 +139,10 @@ function eg_gravatar($text) {
 
 // Options update page:
 function eg_options_page() {
+        if (! current_user_can('manage_options') ) {
+          print "<div class='error'>Permission denied.</div>\n";
+        }
+        
 	// defaults
 	$eg_ratings = array('G', 'PG', 'R', 'X');
 	$maxsize = 80;

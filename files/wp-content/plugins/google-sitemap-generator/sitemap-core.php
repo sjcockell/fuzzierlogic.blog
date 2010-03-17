@@ -1,135 +1,13 @@
 <?php
 /*
  
- $Id: sitemap-core.php 150610 2009-08-30 21:11:36Z arnee $
+ $Id: sitemap-core.php 183641 2009-12-17 00:45:09Z arnee $
 
 */
 
 //Enable for dev! Good code doesn't generate any notices...
 //error_reporting(E_ALL);
 //ini_set("display_errors",1);
-
-#region PHP5 compat functions
-if (!function_exists('file_get_contents')) {
-	/**
-	 * Replace file_get_contents()
-	 *
-	 * @category    PHP
-	 * @package     PHP_Compat
-	 * @link        http://php.net/function.file_get_contents
-	 * @author      Aidan Lister <aidan - php - net>
-	 * @version     $Revision: 1.21 $
-	 * @internal    resource_context is not supported
-	 * @since       PHP 5
-	 */
-	function file_get_contents($filename, $incpath = false, $resource_context = null) {
-		if (false === $fh = fopen($filename, 'rb', $incpath)) {
-			user_error('file_get_contents() failed to open stream: No such file or directory', E_USER_WARNING);
-			return false;
-		}
-		
-		clearstatcache();
-		if ($fsize = @filesize($filename)) {
-			$data = fread($fh, $fsize);
-		} else {
-			$data = '';
-			while (!feof($fh)) {
-				$data .= fread($fh, 8192);
-			}
-		}
-		
-		fclose($fh);
-		return $data;
-	}
-}
-
-
-if(!function_exists('file_put_contents')) {
-	
-	if (!defined('FILE_USE_INCLUDE_PATH')) {
-		define('FILE_USE_INCLUDE_PATH', 1);
-	}
-	
-	if (!defined('LOCK_EX')) {
-		define('LOCK_EX', 2);
-	}
-	
-	if (!defined('FILE_APPEND')) {
-		define('FILE_APPEND', 8);
-	}
-	
-	
-	/**
-	 * Replace file_put_contents()
-	 *
-	 * @category    PHP
-	 * @package     PHP_Compat
-	 * @link        http://php.net/function.file_put_contents
-	 * @author      Aidan Lister <aidan - php - net>
-	 * @version     $Revision: 1.25 $
-	 * @internal    resource_context is not supported
-	 * @since       PHP 5
-	 * @require     PHP 4.0.0 (user_error)
-	 */
-	function file_put_contents($filename, $content, $flags = null, $resource_context = null) {
-		// If $content is an array, convert it to a string
-		if (is_array($content)) {
-			$content = implode('', $content);
-		}
-		
-		// If we don't have a string, throw an error
-		if (!is_scalar($content)) {
-			user_error('file_put_contents() The 2nd parameter should be either a string or an array',E_USER_WARNING);
-			return false;
-		}
-		
-		// Get the length of data to write
-		$length = strlen($content);
-		
-		// Check what mode we are using
-		$mode = ($flags & FILE_APPEND)?'a':'wb';
-		
-		// Check if we're using the include path
-		$use_inc_path = ($flags & FILE_USE_INCLUDE_PATH)?true:false;
-		
-		// Open the file for writing
-		if (($fh = @fopen($filename, $mode, $use_inc_path)) === false) {
-			user_error('file_put_contents() failed to open stream: Permission denied',E_USER_WARNING);
-			return false;
-		}
-		
-		// Attempt to get an exclusive lock
-		$use_lock = ($flags & LOCK_EX) ? true : false ;
-		if ($use_lock === true) {
-			if (!flock($fh, LOCK_EX)) {
-				return false;
-			}
-		}
-		
-		// Write to the file
-		$bytes = 0;
-		if (($bytes = @fwrite($fh, $content)) === false) {
-			$errormsg = sprintf('file_put_contents() Failed to write %d bytes to %s',$length,$filename);
-			user_error($errormsg, E_USER_WARNING);
-			return false;
-		}
-		
-		// Close the handle
-		@fclose($fh);
-		
-		// Check all the data was written
-		if ($bytes != $length) {
-			$errormsg = sprintf('file_put_contents() Only %d of %d bytes written, possibly out of free disk space.',$bytes,$length);
-			user_error($errormsg, E_USER_WARNING);
-			return false;
-		}
-		
-		// Return length
-		return $bytes;
-	}
-	
-}
-#endregion
 
 /**
  * Represents the status (success and failures) of a building process
@@ -153,7 +31,12 @@ class GoogleSitemapGeneratorStatus {
 		update_option("sm_status",$this);
 	}
 	
-	function Load() {
+	/**
+	 * Returns the last saved status object or null
+	 * 
+	 * @return GoogleSitemapGeneratorStatus
+	 */
+	function &Load() {
 		$status = @get_option("sm_status");
 		if(is_a($status,"GoogleSitemapGeneratorStatus")) return $status;
 		else return null;
@@ -287,7 +170,7 @@ class GoogleSitemapGeneratorStatus {
 	var $_googleEndTime = 0;
 	
 	function StartGooglePing($url) {
-		$this->_googleUrl = true;
+		$this->_googleUrl = $url;
 		$this->_usedGoogle = true;
 		$this->_googleStartTime = $this->GetMicrotimeFloat();
 		
@@ -544,7 +427,7 @@ class GoogleSitemapGeneratorXmlEntry {
 class GoogleSitemapGeneratorDebugEntry extends GoogleSitemapGeneratorXmlEntry {
 	
 	function Render() {
-		return "<!-- " . $this->_xml . " -->";
+		return "<!-- " . $this->_xml . " -->\n";
 	}
 }
 
@@ -863,7 +746,7 @@ class GoogleSitemapGenerator {
 	/**
 	 * @var Version of the generator in SVN
 	*/
-	var $_svnVersion = '$Id: sitemap-core.php 150610 2009-08-30 21:11:36Z arnee $';
+	var $_svnVersion = '$Id: sitemap-core.php 183641 2009-12-17 00:45:09Z arnee $';
 	
 	/**
 	 * @var array The unserialized array with the stored options
@@ -919,6 +802,14 @@ class GoogleSitemapGenerator {
 	 * @var object The file handle which is used to write the zipped sitemap file
 	 */
 	var $_fileZipHandle = null;
+	
+	/**
+	 * Holds the user interface object
+	 * 
+	 * @since 3.1.1
+	 * @var GoogleSitemapGeneratorUI
+	 */
+	var $_ui = null;
 	
 	/**
 	 * Returns the path to the blog directory
@@ -1048,6 +939,7 @@ class GoogleSitemapGenerator {
 		$this->_options["sm_in_arch"]=false;				//Include archives
 		$this->_options["sm_in_auth"]=false;				//Include author pages
 		$this->_options["sm_in_tags"]=false;				//Include tag pages
+		$this->_options["sm_in_tax"]=array();				//Include additional taxonomies
 		$this->_options["sm_in_lastmod"]=true;				//Include the last modification date
 
 		$this->_options["sm_cf_home"]="daily";				//Change frequency of the homepage
@@ -1072,6 +964,7 @@ class GoogleSitemapGenerator {
 		$this->_options["sm_i_hide_donated"]=false;			//And hide the thank you..
 		$this->_options["sm_i_install_date"]=time();		//The installation date
 		$this->_options["sm_i_hide_note"]=false;			//Hide the note which appears after 30 days
+		$this->_options["sm_i_hide_works"]=false;			//Hide the "works?" message which appears after 15 days
 		$this->_options["sm_i_hide_donors"]=false;			//Hide the list of donations
 	}
 	
@@ -1268,6 +1161,17 @@ class GoogleSitemapGenerator {
 	}
 	
 	/**
+	 * Returns the list of custom taxonies. These are basically all taxonomies without categories and post tags
+	 * 
+	 * @since 3.1.7
+	 * @return array Array of names of user-defined taxonomies
+	 */
+	function GetCustomTaxonomies() {
+		$taxonomies = get_object_taxonomies('post');
+		return array_diff($taxonomies,array("category","post_tag"));
+	}
+	
+	/**
 	 * Enables the Google Sitemap Generator and registers the WordPress hooks
 	 *
 	 * @since 3.0
@@ -1284,15 +1188,16 @@ class GoogleSitemapGenerator {
 	 * Checks if sitemap building after content changed is enabled and rebuild the sitemap
 	 *
 	 * @param int $postID The ID of the post to handle. Used to avoid double rebuilding if more than one hook was fired.
+	 * @param bool $external Added in 3.1.9. Skips checking of b_auto_enabled if set to true
 	 * @since 3.0
 	 * @access public
 	 * @author Arne Brachhold
 	*/
-	function CheckForAutoBuild($postID) {
+	function CheckForAutoBuild($postID, $external = false) {
 		global $wp_version;
 		$this->Initate();
 		//Build one time per post and if not importing.
-		if($this->GetOption("b_auto_enabled")===true && $this->_lastPostID != $postID && (!defined('WP_IMPORTING') || WP_IMPORTING != true)) {
+		if((($this->GetOption("b_auto_enabled")===true && $this->_lastPostID != $postID) || $external) && (!defined('WP_IMPORTING') || WP_IMPORTING != true)) {
 			
 			//Build the sitemap directly or schedule it with WP cron
 			if($this->GetOption("b_auto_delay")==true && floatval($wp_version) >= 2.1) {
@@ -1311,6 +1216,16 @@ class GoogleSitemapGenerator {
 			}
 			$this->_lastPostID = $postID;
 		}
+	}
+	
+	/**
+	 * Builds the sitemap by external request, for example other plugins.
+	 * 
+	 * @since 3.1.9
+	 * @return null
+	 */
+	function BuildNowRequest() {
+		$this->CheckForAutoBuild(null, true);	
 	}
 	
 	/**
@@ -1644,6 +1559,12 @@ class GoogleSitemapGenerator {
 		return true;
 	}
 	
+	/**
+	 * Adds the sitemap to the virtual robots.txt file
+	 * This function is executed by WordPress with the do_robots hook
+	 * 
+	 * @since 3.1.2
+	 */
 	function DoRobots() {
 		$this->Initate();
 		if($this->GetOption('b_robots') === true) {
@@ -1654,12 +1575,16 @@ class GoogleSitemapGenerator {
 			}
 			
 			echo  "\nSitemap: " . $smUrl . "\n";
-			
 		}
 	}
 	
 	/**
 	 * Builds the sitemap and writes it into a xml file.
+	 * 
+	 * ATTENTION PLUGIN DEVELOPERS! DONT CALL THIS METHOD DIRECTLY!
+	 * The method is probably not available, since it is only loaded when needed.
+	 * Use do_action("sm_rebuild"); if you want to rebuild the sitemap.
+	 * Please refer to the documentation.txt for more details.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -1855,7 +1780,7 @@ class GoogleSitemapGenerator {
 			if($this->GetOption("b_safemode")===true) {
 				$postRes = mysql_query($sql,$wpdb->dbh);
 				if(!$postRes) {
-					trigger_error("MySQL query failed: " . mysql_error(),E_USER_NOTICE); //E_NOTE will be displayed on our debug mode
+					trigger_error("MySQL query failed: " . mysql_error(),E_USER_NOTICE); //E_USER_NOTICE will be displayed on our debug mode
 					return;
 				}
 			} else {
@@ -2113,21 +2038,21 @@ class GoogleSitemapGenerator {
 				//We retrieve only users with published and not password protected posts (and not pages)
 				//WP2.1 introduced post_status='future', for earlier WP versions we need to check the post_date_gmt
 				$sql = "SELECT DISTINCT
-							{$wpdb->users}.ID,
-							{$wpdb->users}.user_nicename,
-							MAX({$wpdb->posts}.post_modified_gmt) AS last_post
+							p.ID,
+							u.user_nicename,
+							MAX(p.post_modified_gmt) AS last_post
 						FROM
-							{$wpdb->users},
-							{$wpdb->posts}
+							{$wpdb->users} u,
+							{$wpdb->posts} p
 						WHERE
-							{$wpdb->posts}.post_author = {$wpdb->users}.ID
-							AND {$wpdb->posts}.post_status = 'publish'
-							AND {$wpdb->posts}.post_type = 'post'
-							AND {$wpdb->posts}.post_password = ''
-							" . (floatval($wp_version) < 2.1?"AND {$wpdb->posts}.post_date_gmt <= '" . gmdate('Y-m-d H:i:59') . "'":"") . "
+							p.post_author = u.ID
+							AND p.post_status = 'publish'
+							AND p.post_type = 'post'
+							AND p.post_password = ''
+							" . (floatval($wp_version) < 2.1?"AND p.post_date_gmt <= '" . gmdate('Y-m-d H:i:59') . "'":"") . "
 						GROUP BY
-							{$wpdb->users}.ID,
-							{$wpdb->users}.user_nicename";
+							u.ID,
+							u.user_nicename";
 							
 				$authors = $wpdb->get_results($sql);
 				
@@ -2158,6 +2083,58 @@ class GoogleSitemapGenerator {
 			if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: End Tags"));
 		}
 		
+		//Add custom taxonomy pages
+		if($this->GetOption("in_tax") && $this->IsTaxonomySupported()) {
+			
+			if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: Start custom taxonomies"));
+			
+			$enabledTaxonomies = $this->GetOption("in_tax");
+			
+			$taxList = array();
+			
+			foreach ($enabledTaxonomies as $taxName) {
+				$taxonomy = get_taxonomy($taxName);
+				if($taxonomy) $taxList[] = $wpdb->escape($taxonomy->name);
+			}
+			
+			if(count($taxList)>0) {
+				//We're selecting all term information (t.*) plus some additional fields
+				//like the last mod date and the taxonomy name, so WP doesnt need to make
+				//additional queries to build the permalink structure.
+				//This does NOT work for categories and tags yet, because WP uses get_category_link
+				//and get_tag_link internally and that would cause one additional query per term!
+				$sql="
+					SELECT
+						t.*,
+						tt.taxonomy AS _taxonomy,
+						UNIX_TIMESTAMP(MAX(post_date_gmt)) as _mod_date
+					FROM
+						{$wpdb->posts} p ,
+						{$wpdb->term_relationships} r,
+						{$wpdb->terms} t,
+						{$wpdb->term_taxonomy} tt
+					WHERE
+						p.ID = r.object_id
+						AND p.post_status = 'publish'
+						AND p.post_type = 'post'
+						AND p.post_password = ''
+						AND r.term_taxonomy_id = t.term_id
+						AND t.term_id = tt.term_id
+						AND tt.count > 0
+						AND tt.taxonomy IN ('" . implode("','",$taxList) . "')
+					GROUP BY
+						t.term_id";
+						
+				$termInfo = $wpdb->get_results($sql);
+				
+				foreach($termInfo AS $term) {
+					$this->AddUrl(get_term_link($term,$term->_taxonomy),$term->_mod_date ,$this->GetOption("cf_tags"),$this->GetOption("pr_tags"));
+				}
+			}
+
+			if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: End custom taxonomies"));
+		}
+		
 		//Add the custom pages
 		if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: Start Custom Pages"));
 		if($this->_pages && is_array($this->_pages) && count($this->_pages)>0) {
@@ -2171,7 +2148,7 @@ class GoogleSitemapGenerator {
 		
 		if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: Start additional URLs"));
 		
-		do_action("sm_buildmap");
+		do_action('sm_buildmap');
 		
 		if($debug) $this->AddElement(new GoogleSitemapGeneratorDebugEntry("Debug: End additional URLs"));
 		
@@ -2261,6 +2238,87 @@ class GoogleSitemapGenerator {
 		return $status;
 	}
 	
+	/**
+	 * Tries to ping a specific service showing as much as debug output as possible
+	 * @since 3.1.9
+	 * @return null
+	 */
+	function ShowPingResult() {
+		
+		check_admin_referer('sitemap');
+		
+		if(!current_user_can("administrator")) {
+			echo '<p>Please log in as admin</p>';
+			return;
+		}
+		
+		$service = !empty($_GET["sm_ping_service"])?$_GET["sm_ping_service"]:null;
+		
+		$status = &GoogleSitemapGeneratorStatus::Load();
+		
+		if(!$status) die("No build status yet. Build the sitemap first.");
+		
+		$url = null;
+
+		switch($service) {
+			case "google":
+				$url = $status->_googleUrl;
+				break;
+			case "yahoo":
+				$url = $status->_yahooUrl;
+				break;
+			case "msn":
+				$url = $status->_msnUrl;
+				break;
+			case "ask":
+				$url = $status->_askUrl;
+				break;			
+		}
+		
+		if(empty($url)) die("Invalid ping url");
+		
+		echo '<html><head><title>Ping Test</title>';
+		if(function_exists('wp_admin_css')) wp_admin_css('css/global',true);
+		echo '</head><body><h1>Ping Test</h1>';
+				
+		echo '<p>Trying to ping: <a href="' . $url . '">' . $url . '</a>. The sections below should give you an idea whats going on.</p>';
+		
+		//Try to get as much as debug / error output as possible
+		$errLevel = error_reporting(E_ALL);
+		$errDisplay = ini_set("display_errors",1);
+		if(!defined('WP_DEBUG')) define('WP_DEBUG',true);
+		
+		echo '<h2>Errors, Warnings, Notices:</h2>';
+		
+		if(WP_DEBUG == false) echo "<i>WP_DEBUG was set to false somewhere before. You might not see all debug information until you remove this declaration!</i><br />";
+		if(ini_get("display_errors")!=1) echo "<i>Your display_errors setting currently prevents the plugin from showing errors here. Please check your webserver logfile instead.</i><br />";
+		
+		$res = $this->RemoteOpen($url);
+		
+		echo '<h2>Result (text only):</h2>';
+
+		echo wp_kses($res,array('a' => array('href' => array()),'p' => array(), 'ul' => array(), 'ol' => array(), 'li' => array()));
+		
+		echo '<h2>Result (HTML):</h2>';
+		
+		echo htmlspecialchars($res);
+
+		//Revert back old values
+		error_reporting($errLevel);
+		ini_set("display_errors",$errDisplay);
+		echo '</body></html>';
+		exit;
+	}
+	
+	/**
+	 * Opens a remote file using the WordPress API or Snoopy
+	 * @since 3.0
+	 * @param $url The URL to open
+	 * @param $method get or post
+	 * @param $postData An array with key=>value paris
+	 * @param $timeout Timeout for the request, by default 10
+	 * @return mixed False on error, the body of the response on success
+	 */
 	function RemoteOpen($url,$method = 'get', $postData = null, $timeout = 10) {
 		global $wp_version;
 		
@@ -2283,7 +2341,9 @@ class GoogleSitemapGenerator {
 				$s->submit($url,$postData);
 			}
 			
-			if($s->status != "200") trigger_error('Snoopy Web Request failed: Status: ' . $s->status . "; Content: " . htmlspecialchars($s->results),E_USER_NOTICE);
+			if($s->status != "200") {
+				trigger_error('Snoopy Web Request failed: Status: ' . $s->status . "; Content: " . htmlspecialchars($s->results),E_USER_NOTICE);
+			}
 			
 			return $s->results;
 	
@@ -2309,17 +2369,6 @@ class GoogleSitemapGenerator {
 		}
 		
 		return false;
-	}
-
-	/**
-	 * Tracks the last error (gets called by PHP)
-	 *
-	 * @since 3.0
-	 * @access private
-	 * @author Arne Brachhold
-	 */
-	function TrackError($log_level, $log_text, $error_file, $error_line) {
-		$this->_lastError = $log_text;
 	}
 	
 	/**
@@ -2351,7 +2400,8 @@ class GoogleSitemapGenerator {
 		$currentVal=(float) $currentVal;
 		for($i=0.0; $i<=1.0; $i+=0.1) {
 			$v = number_format($i,1,".","");
-			$t = number_format_i18n($i,1);
+			//number_format_i18n is there since WP 2.3
+			$t = function_exists('number_format_i18n')?number_format_i18n($i,1):number_format($i,1);
 			echo "<option value=\"" . $v . "\" " . $this->HtmlGetSelected("$i","$currentVal") .">";
 			echo $t;
 			echo "</option>";
@@ -2448,6 +2498,12 @@ class GoogleSitemapGenerator {
 		return $pages;
 	}
 	
+	/**
+	 * Converts a mysql datetime value into a unix timestamp
+	 * 
+	 * @param The value in the mysql datetime format
+	 * @return int The time in seconds
+	 */
 	function GetTimestampFromMySql($mysqlDateTime) {
 		list($date, $hours) = split(' ', $mysqlDateTime);
 		list($year,$month,$day) = split('-',$date);
@@ -2455,20 +2511,43 @@ class GoogleSitemapGenerator {
 		return mktime(intval($hour), intval($min), intval($sec), intval($month), intval($day), intval($year));
 	}
 	
+	/**
+	 * Returns a link pointing to a spcific page of the authors website
+	 * 
+	 * @since 3.0
+	 * @param The page to link to
+	 * @return string The full url
+	 */
 	function GetRedirectLink($redir) {
 		return trailingslashit("http://www.arnebrachhold.de/redir/" . $redir);
 	}
 	
+	/**
+	 * Returns a link pointing back to the plugin page in WordPress
+	 * 
+	 * @since 3.0
+	 * @return string The full url
+	 */
 	function GetBackLink() {
-		$page = basename(__FILE__);
-		if(isset($_GET['page']) && !empty($_GET['page'])) {
-			$page = preg_replace('[^a-zA-Z0-9\.\_\-]','',$_GET['page']);
-		}
+		global $wp_version;
+		$url = '';
+		//admin_url was added in WP 2.6.0
+		if(function_exists("admin_url")) $url = admin_url("options-general.php?page=" .  GoogleSitemapGeneratorLoader::GetBaseName());
+		else $url = $_SERVER['PHP_SELF'] . "?page=" .  GoogleSitemapGeneratorLoader::GetBaseName();
 		
-		if(function_exists("admin_url")) return admin_url(basename($_SERVER["PHP_SELF"])) . "?page=" .  $page;
-		else return $_SERVER['PHP_SELF'] . "?page=" .  $page;
+		//Some browser cache the page... great! So lets add some no caching params depending on the WP and plugin version
+		$url.='&sm_wpv=' . $wp_version . '&sm_pv=' . GoogleSitemapGeneratorLoader::GetVersion();
+		
+		return $url;
 	}
 	
+	/**
+	 * Shows the option page of the plugin. Before 3.1.1, this function was basically the UI, afterwards the UI was outsourced to another class
+	 * 
+	 * @see GoogleSitemapGeneratorUI
+	 * @since 3.0
+	 * @return bool
+	 */
 	function HtmlShowOptionsPage() {
 		
 		$ui = $this->GetUI();
@@ -2480,8 +2559,13 @@ class GoogleSitemapGenerator {
 		return false;
 	}
 	
-	var $_ui = null;
-	
+	/**
+	 * Includes the user interface class and intializes it
+	 * 
+	 * @since 3.1.1
+	 * @see GoogleSitemapGeneratorUI
+	 * @return GoogleSitemapGeneratorUI
+	 */
 	function GetUI() {
 
 		global $wp_version;

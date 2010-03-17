@@ -1,7 +1,7 @@
 <?php
 
 /*
- $Id: sitemap.php 150611 2009-08-30 21:12:33Z arnee $
+ $Id: sitemap.php 183644 2009-12-17 01:00:22Z arnee $
 
  Google XML Sitemaps Generator for WordPress
  ==============================================================================
@@ -24,10 +24,13 @@
  ==============================================================================
  Plugin Name: Google XML Sitemaps
  Plugin URI: http://www.arnebrachhold.de/redir/sitemap-home/
- Description: This plugin will generate a sitemaps.org compatible sitemap of your WordPress blog which is supported by Ask.com, Google, MSN Search and YAHOO. <a href="options-general.php?page=sitemap.php">Configuration Page</a>
- Version: 3.1.6
+ Description: This plugin will generate a special XML sitemap which will help search engines like Google, Yahoo, Bing and Ask.com to better index your blog.
+ Version: 3.2.2
  Author: Arne Brachhold
  Author URI: http://www.arnebrachhold.de/
+ Text Domain: sitemap
+ Domain Path: /lang/
+ 
 */
 
 /**
@@ -66,6 +69,9 @@ class GoogleSitemapGeneratorLoader {
 		//WP Cron hook
 		add_action('sm_build_cron', array('GoogleSitemapGeneratorLoader', 'CallBuildSitemap'),1,0);
 		
+		//External build hook
+		add_action('sm_rebuild', array('GoogleSitemapGeneratorLoader', 'CallBuildNowRequest'),1,0);
+		
 		//Robots.txt request
 		add_action('do_robots', array('GoogleSitemapGeneratorLoader', 'CallDoRobots'),100,0);
 		
@@ -76,6 +82,11 @@ class GoogleSitemapGeneratorLoader {
 		if(!empty($_GET["sm_command"]) && !empty($_GET["sm_key"])) {
 			GoogleSitemapGeneratorLoader::CallCheckForManualBuild();
 		}
+		
+		//Check if the result of a ping request should be shown
+		if(!empty($_GET["sm_ping_service"])) {
+			GoogleSitemapGeneratorLoader::CallShowPingResult();
+		}
 	}
 
 	/**
@@ -84,12 +95,12 @@ class GoogleSitemapGeneratorLoader {
 	function RegisterAdminPage() {
 		
 		if (function_exists('add_options_page')) {
-			add_options_page(__('XML-Sitemap Generator','sitemap'), __('XML-Sitemap','sitemap'), 10, 'sitemap.php', array('GoogleSitemapGeneratorLoader','CallHtmlShowOptionsPage'));
+			add_options_page(__('XML-Sitemap Generator','sitemap'), __('XML-Sitemap','sitemap'), 10, GoogleSitemapGeneratorLoader::GetBaseName(), array('GoogleSitemapGeneratorLoader','CallHtmlShowOptionsPage'));
 		}
 	}
 	
 	function RegisterAdminIcon($hook) {
-		if ( $hook == 'sitemap.php' && function_exists('plugins_url')) {
+		if ( $hook == GoogleSitemapGeneratorLoader::GetBaseName() && function_exists('plugins_url')) {
 			return plugins_url('img/icon-arne.gif',GoogleSitemapGeneratorLoader::GetBaseName());
 		}
 		return $hook;
@@ -98,10 +109,10 @@ class GoogleSitemapGeneratorLoader {
 	function RegisterPluginLinks($links, $file) {
 		$base = GoogleSitemapGeneratorLoader::GetBaseName();
 		if ($file == $base) {
-			$links[] = '<a href="options-general.php?page=sitemap.php">' . __('Settings') . '</a>';
-			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-faq/">' . __('FAQ') . '</a>';
-			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-support/">' . __('Support') . '</a>';
-			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-donate/">' . __('Donate') . '</a>';
+			$links[] = '<a href="options-general.php?page=' . GoogleSitemapGeneratorLoader::GetBaseName() .'">' . __('Settings','sitemap') . '</a>';
+			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-faq/">' . __('FAQ','sitemap') . '</a>';
+			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-support/">' . __('Support','sitemap') . '</a>';
+			$links[] = '<a href="http://www.arnebrachhold.de/redir/sitemap-plist-donate/">' . __('Donate','sitemap') . '</a>';
 		}
 		return $links;
 	}
@@ -111,7 +122,7 @@ class GoogleSitemapGeneratorLoader {
 	 */
 	function CallHtmlShowOptionsPage() {
 		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
-			$gs = GoogleSitemapGenerator::GetInstance();
+			$gs = &GoogleSitemapGenerator::GetInstance();
 			$gs->HtmlShowOptionsPage();
 		}
 	}
@@ -121,8 +132,18 @@ class GoogleSitemapGeneratorLoader {
 	 */
 	function CallCheckForAutoBuild($args) {
 		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
-			$gs = GoogleSitemapGenerator::GetInstance();
+			$gs = &GoogleSitemapGenerator::GetInstance();
 			$gs->CheckForAutoBuild($args);
+		}
+	}
+	
+	/**
+	 * Invokes the CheckForAutoBuild method of the generator
+	 */
+	function CallBuildNowRequest() {
+		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
+			$gs = &GoogleSitemapGenerator::GetInstance();
+			$gs->BuildNowRequest();
 		}
 	}
 	
@@ -131,7 +152,7 @@ class GoogleSitemapGeneratorLoader {
 	 */
 	function CallBuildSitemap() {
 		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
-			$gs = GoogleSitemapGenerator::GetInstance();
+			$gs = &GoogleSitemapGenerator::GetInstance();
 			$gs->BuildSitemap();
 		}
 	}
@@ -141,24 +162,37 @@ class GoogleSitemapGeneratorLoader {
 	 */
 	function CallCheckForManualBuild() {
 		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
-			$gs = GoogleSitemapGenerator::GetInstance();
+			$gs = &GoogleSitemapGenerator::GetInstance();
 			$gs->CheckForManualBuild();
+		}
+	}
+	
+	/**
+	 * Invokes the ShowPingResult method of the generator
+	 */
+	function CallShowPingResult() {
+		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
+			$gs = &GoogleSitemapGenerator::GetInstance();
+			$gs->ShowPingResult();
 		}
 	}
 	
 
 	function CallHtmlShowHelpList($filterVal,$screen) {
-		if($screen == "settings_page_sitemap") {
+		
+		$id = get_plugin_page_hookname(GoogleSitemapGeneratorLoader::GetBaseName(),'options-general.php');		
+		
+		if($screen == $id) {
 			$links = array(
 				__('Plugin Homepage','sitemap')=>'http://www.arnebrachhold.de/redir/sitemap-help-home/',
-				__('Sitemap FAQ')=>'http://www.arnebrachhold.de/redir/sitemap-help-faq/'
+				__('My Sitemaps FAQ','sitemap')=>'http://www.arnebrachhold.de/redir/sitemap-help-faq/'
 			);
 			
-			$filterVal["settings_page_sitemap"] = '';
+			$filterVal[$id] = '';
 			
 			$i=0;
 			foreach($links AS $text=>$url) {
-				$filterVal["settings_page_sitemap"].='<a href="' . $url . '">' . $text . '</a>' . ($i < (count($links)-1)?'<br />':'') ;
+				$filterVal[$id].='<a href="' . $url . '">' . $text . '</a>' . ($i < (count($links)-1)?'<br />':'') ;
 				$i++;
 			}
 		}
@@ -167,7 +201,7 @@ class GoogleSitemapGeneratorLoader {
 	
 	function CallDoRobots() {
 		if(GoogleSitemapGeneratorLoader::LoadPlugin()) {
-			$gs = GoogleSitemapGenerator::GetInstance();
+			$gs = &GoogleSitemapGenerator::GetInstance();
 			$gs->DoRobots();
 		}
 	}
@@ -227,16 +261,17 @@ class GoogleSitemapGeneratorLoader {
 	 * @return string The version like 3.1.1
 	 */
 	function GetVersion() {
-		if(!function_exists('get_plugin_data')) {
-			if(file_exists(ABSPATH . 'wp-admin/includes/plugin.php')) require_once(ABSPATH . 'wp-admin/includes/plugin.php'); //2.3+
-			else if(file_exists(ABSPATH . 'wp-admin/admin-functions.php')) require_once(ABSPATH . 'wp-admin/admin-functions.php'); //2.1
-			else return "0.ERROR";
+		if(!isset($GLOBALS["sm_version"])) {
+			if(!function_exists('get_plugin_data')) {
+				if(file_exists(ABSPATH . 'wp-admin/includes/plugin.php')) require_once(ABSPATH . 'wp-admin/includes/plugin.php'); //2.3+
+				else if(file_exists(ABSPATH . 'wp-admin/admin-functions.php')) require_once(ABSPATH . 'wp-admin/admin-functions.php'); //2.1
+				else return "0.ERROR";
+			}
+			$data = get_plugin_data(__FILE__, false, false);
+			$GLOBALS["sm_version"] = $data['Version'];
 		}
-		$data = get_plugin_data(__FILE__);
-		return $data['Version'];
+		return $GLOBALS["sm_version"];
 	}
-	
-
 }
 
 //Enable the plugin for the init hook, but only if WP is loaded. Calling this php file directly will do nothing.

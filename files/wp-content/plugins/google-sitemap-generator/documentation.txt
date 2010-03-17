@@ -27,25 +27,15 @@
  Inspiration            Michael Nguyen      http://www.socialpatterns.com/
  SQL Improvements       Rodney Shupe        http://www.shupe.ca/
  Japanse Lang. File     Hirosama            http://hiromasa.zone.ne.jp/
- Spanish lang. File     César Gómez Martín  http://www.cesargomez.org/
+ Spanish lang. File     Omi                 http://equipajedemano.info/
  Italian lang. File     Stefano Aglietti    http://wordpress-it.it/
  Trad.Chinese  File     Kirin Lin           http://kirin-lin.idv.tw/
  Simpl.Chinese File     june6               http://www.june6.cn/
  Swedish Lang. File     Tobias Bergius      http://tobiasbergius.se/
  Czech Lang. File       Peter Kahoun        http://kahi.cz
- Finnish Lang. File	Olli Jarva          http://kuvat.blog.olli.jarva.fi/ 
+ Finnish Lang. File     Olli Jarva          http://kuvat.blog.olli.jarva.fi/ 
  Belorussian Lang. File Marcis Gasuns
  Bulgarian Lang. File   Alexander Dichev    http://dichev.com
- Ping Code Template 1   James               http://www.adlards.com/
- Ping Code Template 2   John                http://www.jonasblog.com/
- Bug Report             Brad                http://h3h.net/
- Bug Report             Christian Aust      http://publicvoidblog.de/
- Bug Report             Joseph Abboud
- Bug Report             Mike                http://baptiste.us/
- Bug Report             Peter               http://fastagent.de/
- Bug Report             Glenn               http://publicityship.com.au/
- Bug Report             froosh
- File Handling          VJTD3               http://www.vjtd3.com/
  
  Thanks to all contributors and bug reporters! There were much more people involved 
  in testing this plugin and reporting bugs, either by email or in the WordPress forums.
@@ -204,7 +194,6 @@
                         Moved global post definitions for other plugins
                         Added small icon for ozh admin menu
                         Added more help links in UI
-
  2009-08-24     3.1.5   Added option to completely disable the last modification time
                         Fixed bug regarding the use of the HTTPS url for the XSL stylesheet if the sitemap was build via the admin panel
                         Improved handling of homepage if a single page was set for it
@@ -213,7 +202,28 @@
                         Improved handling of missing sitemaps files if WP was moved to another location
  2009-08-31     3.1.6   Fixed PHP error "Only variables can be passed by reference"
                         Fixed wrong URLS of multi-page posts (Thanks artstorm!)
-
+ 2009-10-21     3.1.7   Added support for custom taxonomies (Thanks to Lee!)
+ 2009-11-07     3.1.8   Improved custom taxonomy handling and fixed wrong last modification date
+                        Changed readme and backlinks
+                        Fixed fatal error in WP < 2.3
+                        Fixed Update Notice in WP 2.8+
+                        Added warning if blog privacy is activated
+                        Fixed custom URLs priorities were shown as 0 instead of 1
+ 2009-11-13     3.1.9   Fixed MySQL Error if author pages were included
+ 2009-11-23     3.2     Added function to show the actual results of a ping instead of only linking to the url
+                        Added new hook (sm_rebuild) for third party plugins to start building the sitemap
+                        Fixed bug which showed the wrong URL for the latest Google ping result 
+                        Added some missing phpdoc documentation
+                        Removed hardcoded php name for sitemap file for admin urls
+                        Uses KSES for showing ping test results
+                        Ping test fixed for WP < 2.3
+ 2009-12-16     3.2.1   Notes and update messages could interfere with the redirect after manual build
+                        Help Links in the WP context help were not shown anymore since last update
+                        IE 7 sometimes displayed a cached admin page
+                        Removed invalid link to config page from the plugin description (This resulted in a "Not enough permission error")
+                        Improved performance of getting the current plugin version with caching
+                        Updated Spanish language files
+ 2009-12-19     3.2.2   Fixed PHP4 problems
 
  Maybe Todo:
  ==============================================================================
@@ -251,8 +261,9 @@
   to add your content.
   
   Sample:
+  
   function your_pages() {
-	$generatorObject = &GoogleSitemapGenerator::GetInstance(); //Please note the "&" sign!
+	$generatorObject = &GoogleSitemapGenerator::GetInstance(); //Please note the "&" sign for PHP4!
 	if($generatorObject!=null) $generatorObject->AddUrl("http://blog.uri/tags/hello/",time(),"daily",0.5);
   }
   add_action("sm_buildmap","your_pages");
@@ -262,6 +273,23 @@
   - The last modified data, as a UNIX timestamp (optional)
   - The Change Frequency (daily, hourly, weekly and so on) (optional)
   - The priority 0.0 to 1.0 (optional)
+ 
+
+ Rebuilding the sitemap on request
+
+  If you want to rebuild the sitemap because dynamic content from your plugin has changed,
+  please use the "sm_rebuild" hook which is available since 3.1.9.
+  All other methods, like calling the Build method directly are highly unrecommended and might
+  not work anymore with the next version of the plugin. Using this hook, the sitemap plugin will
+  take care of everything like loading the required classes and so on.
+  
+  Sample:
+  
+  do_action("sm_rebuild");
+  
+  The sitemap might not be rebuild immediately, since newer versions use a background WP-Cron
+  job by default to prevent that the user has to wait and avoid multiple rebuilds within a very short time.
+  In case the sitemap plugin is not installed, nothing will happen and no errors will be thrown.
  
  ===============================================
  

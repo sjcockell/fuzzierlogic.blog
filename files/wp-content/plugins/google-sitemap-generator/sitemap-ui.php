@@ -1,7 +1,7 @@
 <?php
 /*
  
- $Id: sitemap-ui.php 150610 2009-08-30 21:11:36Z arnee $
+ $Id: sitemap-ui.php 183641 2009-12-17 00:45:09Z arnee $
 
 */
 
@@ -16,9 +16,9 @@ class GoogleSitemapGeneratorUI {
 	
 	var $mode = 21;
 
-	function GoogleSitemapGeneratorUI($sitemapBuilder) {
+	function GoogleSitemapGeneratorUI(&$sitemapBuilder) {
 		global $wp_version;
-		$this->sg = $sitemapBuilder;
+		$this->sg = &$sitemapBuilder;
 		
 		if(floatval($wp_version) >= 2.7) {
 			$this->mode = 27;
@@ -69,67 +69,19 @@ class GoogleSitemapGeneratorUI {
 	 */
 	function HtmlShowOptionsPage() {
 		global $wp_version;
+		
+		$snl = false; //SNL
+		
 		$this->sg->Initate();
 			
-		//All output should go in this var which get printed at the end
 		$message="";
-		
-		if(isset($_GET['sm_hidedonate'])) {
-			$this->sg->SetOption('i_hide_donated',true);
-			$this->sg->SaveOptions();
-		}
-		if(isset($_GET['sm_donated'])) {
-			$this->sg->SetOption('i_donated',true);
-			$this->sg->SaveOptions();
-		}
-		if(isset($_GET['sm_hide_note'])) {
-			$this->sg->SetOption('i_hide_note',true);
-			$this->sg->SaveOptions();
-		}
-		if(isset($_GET['sm_hidedonors'])) {
-			$this->sg->SetOption('i_hide_donors',true);
-			$this->sg->SaveOptions();
-		}
-		
-		if(isset($_GET['sm_donated']) || ($this->sg->GetOption('i_donated')===true && $this->sg->GetOption('i_hide_donated')!==true)) {
-			?>
-			<div class="updated">
-				<strong><p><?php _e('Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!','sitemap'); ?> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hidedonate=true"; ?>"><small style="font-weight:normal;"><?php _e('Hide this notice', 'sitemap'); ?></small></a></p></strong>
-			</div>
-			<?php
-		} else if($this->sg->GetOption('i_donated') !== true && $this->sg->GetOption('i_install_date')>0 && $this->sg->GetOption('i_hide_note')!==true && time() > ($this->sg->GetOption('i_install_date') + (60*60*24*30))) {
-			?>
-			<div class="updated">
-				<strong><p><?php echo str_replace("%s",$this->sg->GetRedirectLink("sitemap-donate-note"),__('Thanks for using this plugin! You\'ve installed this plugin over a month ago. If it works and your are satisfied with the results, isn\'t it worth at least one dollar? <a href="%s">Donations</a> help me to continue support and development of this <i>free</i> software! <a href="%s">Sure, no problem!</a>','sitemap')); ?> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hide_note=true"; ?>" style="float:right; display:block; border:none;"><small style="font-weight:normal; "><?php _e('No thanks, please don\'t bug me anymore!', 'sitemap'); ?></small></a></p></strong>
-				<div style="clear:right;"></div>
-			</div>
-			<?php
-		}
-		
-		if(function_exists("wp_next_scheduled")) {
-			$next = wp_next_scheduled('sm_build_cron');
-			if($next) {
-				$diff = (time()-$next)*-1;
-				if($diff <= 0) {
-					$diffMsg = __('Your sitemap is being refreshed at the moment. Depending on your blog size this might take some time!','sitemap');
-				} else {
-					$diffMsg = str_replace("%s",$diff,__('Your sitemap will be refreshed in %s seconds. Depending on your blog size this might take some time!','sitemap'));
-				}
-				?>
-				<div class="updated">
-					<strong><p><?php echo $diffMsg ?></p></strong>
-					<div style="clear:right;"></div>
-				</div>
-				<?php
-			}
-		}
-		if(!empty($_REQUEST["sm_rebuild"]) || !empty($_REQUEST["sm_rebuild"])) {
-			//Clear any outstanding build cron jobs
-			if(function_exists('wp_clear_scheduled_hook')) wp_clear_scheduled_hook('sm_build_cron');
-		}
 		
 		if(!empty($_REQUEST["sm_rebuild"])) { //Pressed Button: Rebuild Sitemap
 			check_admin_referer('sitemap');
+			
+			//Clear any outstanding build cron jobs
+			if(function_exists('wp_clear_scheduled_hook')) wp_clear_scheduled_hook('sm_build_cron');
+			
 			if(isset($_GET["sm_do_debug"]) && $_GET["sm_do_debug"]=="true") {
 				
 				//Check again, just for the case that something went wrong before
@@ -168,7 +120,7 @@ class GoogleSitemapGeneratorUI {
 				$popts = array();
 				foreach($opts as $k=>$v) {
 					//Try to filter out passwords etc...
-					if(preg_match("/(pass|login|pw|secret|user|usr)/si",$v)) continue;
+					if(preg_match("/pass|login|pw|secret|user|usr|key|auth|token/si",$k)) continue;
 					$popts[$k] = htmlspecialchars($v);
 				}
 				print_r($popts);
@@ -267,7 +219,19 @@ class GoogleSitemapGeneratorUI {
 					}
 				//Options of the category "Includes" are boolean
 				} else if(substr($k,0,6)=="sm_in_") {
-					$this->sg->_options[$k]=(bool) $_POST[$k];
+					if($k=='sm_in_tax') {
+
+						$enabledTaxonomies = array();
+						
+						foreach(array_keys((array) $_POST[$k]) AS $taxName) {
+							if(empty($taxName) || !is_taxonomy($taxName)) continue;
+
+							$enabledTaxonomies[] = $taxName;
+						}
+
+						$this->sg->_options[$k] = $enabledTaxonomies;
+												
+					} else $this->sg->_options[$k]=(bool) $_POST[$k];
 				//Options of the category "Change frequencies" are string
 				} else if(substr($k,0,6)=="sm_cf_") {
 					$this->sg->_options[$k]=(string) $_POST[$k];
@@ -311,6 +275,74 @@ class GoogleSitemapGeneratorUI {
 			echo $message;
 			?></p></strong></div><?php
 		}
+		
+		
+		if(!$snl) {
+		
+			if(isset($_GET['sm_hidedonate'])) {
+				$this->sg->SetOption('i_hide_donated',true);
+				$this->sg->SaveOptions();
+			}
+			if(isset($_GET['sm_donated'])) {
+				$this->sg->SetOption('i_donated',true);
+				$this->sg->SaveOptions();
+			}
+			if(isset($_GET['sm_hide_note'])) {
+				$this->sg->SetOption('i_hide_note',true);
+				$this->sg->SaveOptions();
+			}
+			if(isset($_GET['sm_hidedonors'])) {
+				$this->sg->SetOption('i_hide_donors',true);
+				$this->sg->SaveOptions();
+			}
+			if(isset($_GET['sm_hide_works'])) {
+				$this->sg->SetOption('i_hide_works',true);
+				$this->sg->SaveOptions();
+			}
+			
+			
+			if(isset($_GET['sm_donated']) || ($this->sg->GetOption('i_donated')===true && $this->sg->GetOption('i_hide_donated')!==true)) {
+				?>
+				<div class="updated">
+					<strong><p><?php _e('Thank you very much for your donation. You help me to continue support and development of this plugin and other free software!','sitemap'); ?> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hidedonate=true"; ?>"><small style="font-weight:normal;"><?php _e('Hide this notice', 'sitemap'); ?></small></a></p></strong>
+				</div>
+				<?php
+			} else if($this->sg->GetOption('i_donated') !== true && $this->sg->GetOption('i_install_date')>0 && $this->sg->GetOption('i_hide_note')!==true && time() > ($this->sg->GetOption('i_install_date') + (60*60*24*30))) {
+				?>
+				<div class="updated">
+					<strong><p><?php echo str_replace("%s",$this->sg->GetRedirectLink("sitemap-donate-note"),__('Thanks for using this plugin! You\'ve installed this plugin over a month ago. If it works and you are satisfied with the results, isn\'t it worth at least a few dollar? <a href="%s">Donations</a> help me to continue support and development of this <i>free</i> software! <a href="%s">Sure, no problem!</a>','sitemap')); ?> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_donated=true"; ?>" style="float:right; display:block; border:none; margin-left:10px;"><small style="font-weight:normal; "><?php _e('Sure, but I already did!', 'sitemap'); ?></small></a> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hide_note=true"; ?>" style="float:right; display:block; border:none;"><small style="font-weight:normal; "><?php _e('No thanks, please don\'t bug me anymore!', 'sitemap'); ?></small></a></p></strong>
+					<div style="clear:right;"></div>
+				</div>
+				<?php
+			} else if($this->sg->GetOption('i_install_date')>0 && $this->sg->GetOption('i_hide_works')!==true && time() > ($this->sg->GetOption('i_install_date') + (60*60*24*15))) {
+				?>
+				<div class="updated">
+					<strong><p><?php echo str_replace("%s",$this->sg->GetRedirectLink("sitemap-works-note"),__('Thanks for using this plugin! You\'ve installed this plugin some time ago. If it works and your are satisfied, why not <a href="%s">rate it</a> and <a href="%s">recommend it</a> to others? :-)','sitemap')); ?> <a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hide_works=true"; ?>" style="float:right; display:block; border:none;"><small style="font-weight:normal; "><?php _e('Don\'t show this anymore', 'sitemap'); ?></small></a></p></strong>
+					<div style="clear:right;"></div>
+				</div>
+				<?php
+			}
+		}
+		
+		if(function_exists("wp_next_scheduled")) {
+			$next = wp_next_scheduled('sm_build_cron');
+			if($next) {
+				$diff = (time()-$next)*-1;
+				if($diff <= 0) {
+					$diffMsg = __('Your sitemap is being refreshed at the moment. Depending on your blog size this might take some time!<br /><small>Due to limitations of the WordPress scheduler, it might take another 60 seconds until the build process is actually started.</small>','sitemap');
+				} else {
+					$diffMsg = str_replace("%s",$diff,__('Your sitemap will be refreshed in %s seconds. Depending on your blog size this might take some time!','sitemap'));
+				}
+				?>
+				<div class="updated">
+					<strong><p><?php echo $diffMsg ?></p></strong>
+					<div style="clear:right;"></div>
+				</div>
+				<?php
+			}
+		}
+		
+		
 		?>
 				
 		<style type="text/css">
@@ -412,9 +444,11 @@ class GoogleSitemapGeneratorUI {
 						width:200px;
 						margin-left:10px;
 					}
+					<?php if(!$snl): ?>
 					div#advancedstuff {
 						width:770px;
 					}
+					<?php endif;?>
 					div#poststuff {
 						margin-top:10px;
 					}
@@ -446,29 +480,38 @@ class GoogleSitemapGeneratorUI {
 		<div class="wrap" id="sm_div">
 			<form method="post" action="<?php echo $this->sg->GetBackLink() ?>">
 				<h2><?php _e('XML Sitemap Generator for WordPress', 'sitemap'); echo " " . $this->sg->GetVersion() ?> </h2>
-		<?php
-		if(function_exists("wp_update_plugins") && (!defined('SM_NO_UPDATE') || SM_NO_UPDATE == false)) {
-			wp_update_plugins();
-			
-			$file = GoogleSitemapGeneratorLoader::GetBaseName();
-			
-			$plugin_data = get_plugin_data(GoogleSitemapGeneratorLoader::GetPluginFile());
-			$current = get_option( 'update_plugins' );
-			if(isset($current->response[$file])) {
-				$r = $current->response[$file];
-				?><div id="update-nag" class="sm-update-nag"><?php
-				if ( !current_user_can('edit_plugins') || version_compare($wp_version,"2.5","<") )
-					printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a>.','default'), $plugin_data['Name'], $r->url, $r->new_version);
-				else if ( empty($r->package) )
-					printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a> <em>automatic upgrade unavailable for this plugin</em>.','default'), $plugin_data['Name'], $r->url, $r->new_version);
-				else
-					printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a> or <a href="%4$s">upgrade automatically</a>.','default'), $plugin_data['Name'], $r->url, $r->new_version, wp_nonce_url("update.php?action=upgrade-plugin&amp;plugin=$file", 'upgrade-plugin_' . $file) );
-
-				?></div><?php
-			}
-		}
-		?>
+				<?php
+				if(function_exists("wp_update_plugins") && (!defined('SM_NO_UPDATE') || SM_NO_UPDATE == false)) {
+					
+					wp_update_plugins();
+					
+					$file = GoogleSitemapGeneratorLoader::GetBaseName();
+					
+					$plugin_data = get_plugin_data(GoogleSitemapGeneratorLoader::GetPluginFile());
+					
+					$current = function_exists('get_transient')?get_transient('update_plugins'):get_option('update_plugins');
+					
+					if(isset($current->response[$file])) {
+						$r = $current->response[$file];
+						?><div id="update-nag" class="sm-update-nag"><?php
+						if ( !current_user_can('edit_plugins') || version_compare($wp_version,"2.5","<") )
+							printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a>.','default'), $plugin_data['Name'], $r->url, $r->new_version);
+						else if ( empty($r->package) )
+							printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a> <em>automatic upgrade unavailable for this plugin</em>.','default'), $plugin_data['Name'], $r->url, $r->new_version);
+						else
+							printf( __('There is a new version of %1$s available. <a href="%2$s">Download version %3$s here</a> or <a href="%4$s">upgrade automatically</a>.','default'), $plugin_data['Name'], $r->url, $r->new_version, wp_nonce_url("update.php?action=upgrade-plugin&amp;plugin=$file", 'upgrade-plugin_' . $file) );
+		
+						?></div><?php
+					}
+				}
 				
+				
+				if(get_option('blog_public')!=1) {
+					?><div class="error"><p><?php echo str_replace("%s","options-privacy.php",__('Your blog is currently blocking search engines! Visit the <a href="%s">privacy settings</a> to change this.','sitemap')); ?></p></div><?php
+				}
+				
+				?>
+
 				<?php if(version_compare($wp_version,"2.5","<")): ?>
 				<script type="text/javascript" src="../wp-includes/js/dbx.js"></script>
 				<script type="text/javascript">
@@ -516,62 +559,75 @@ class GoogleSitemapGeneratorUI {
 				<?php endif; ?>
 
 				<?php if($this->mode == 27): ?>
-				<div id="poststuff" class="metabox-holder has-right-sidebar">
-					<div class="inner-sidebar">
-						<div id="side-sortables" class="meta-box-sortabless ui-sortable" style="position:relative;">
+				
+					<?php if(!$snl): ?>
+						<div id="poststuff" class="metabox-holder has-right-sidebar">
+							<div class="inner-sidebar">
+								<div id="side-sortables" class="meta-box-sortabless ui-sortable" style="position:relative;">
+					<?php else: ?>
+						<div id="poststuff" class="metabox-holder">
+					<?php endif; ?>
 				<?php else: ?>
-				<div id="poststuff">
-					<div id="moremeta">
-						<div id="grabit" class="dbx-group">
+					<?php if(!$snl): ?>
+						<div id="poststuff">
+							<div id="moremeta">
+								<div id="grabit" class="dbx-group">
+					<?php else: ?>
+						<div>
+					<?php endif; ?>
 				<?php endif; ?>
 				
-						<?php $this->HtmlPrintBoxHeader('sm_pnres',__('About this Plugin:','sitemap'),true); ?>
-							<a class="sm_button sm_pluginHome"    href="<?php echo $this->sg->GetRedirectLink('sitemap-home'); ?>"><?php _e('Plugin Homepage','sitemap'); ?></a>
-							<a class="sm_button sm_pluginHome"    href="<?php echo $this->sg->GetRedirectLink('sitemap-feedback'); ?>"><?php _e('Suggest a Feature','sitemap'); ?></a>
-							<a class="sm_button sm_pluginList"    href="<?php echo $this->sg->GetRedirectLink('sitemap-list'); ?>"><?php _e('Notify List','sitemap'); ?></a>
-							<a class="sm_button sm_pluginSupport" href="<?php echo $this->sg->GetRedirectLink('sitemap-support'); ?>"><?php _e('Support Forum','sitemap'); ?></a>
-							<a class="sm_button sm_pluginBugs"    href="<?php echo $this->sg->GetRedirectLink('sitemap-bugs'); ?>"><?php _e('Report a Bug','sitemap'); ?></a>
-							
-							<a class="sm_button sm_donatePayPal"  href="<?php echo $this->sg->GetRedirectLink('sitemap-paypal'); ?>"><?php _e('Donate with PayPal','sitemap'); ?></a>
-							<a class="sm_button sm_donateAmazon"  href="<?php echo $this->sg->GetRedirectLink('sitemap-amazon'); ?>"><?php _e('My Amazon Wish List','sitemap'); ?></a>
-							<?php if(__('translator_name','sitemap')!='translator_name') {?><a class="sm_button sm_pluginSupport" href="<?php _e('translator_url','sitemap'); ?>"><?php _e('translator_name','sitemap'); ?></a><?php } ?>
-						<?php $this->HtmlPrintBoxFooter(true); ?>
-						
-						<?php $this->HtmlPrintBoxHeader('sm_smres',__('Sitemap Resources:','sitemap'),true); ?>
-							<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-gwt'); ?>"><?php _e('Webmaster Tools','sitemap'); ?></a>
-							<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-gwb'); ?>"><?php _e('Webmaster Blog','sitemap'); ?></a>
-							
-							<a class="sm_button sm_resYahoo"     href="<?php echo $this->sg->GetRedirectLink('sitemap-yse'); ?>"><?php _e('Site Explorer','sitemap'); ?></a>
-							<a class="sm_button sm_resYahoo"     href="<?php echo $this->sg->GetRedirectLink('sitemap-ywb'); ?>"><?php _e('Search Blog','sitemap'); ?></a>
-							
-							<a class="sm_button sm_resBing"     href="<?php echo $this->sg->GetRedirectLink('sitemap-lwt'); ?>"><?php _e('Webmaster Tools','sitemap'); ?></a>
-							<a class="sm_button sm_resBing"     href="<?php echo $this->sg->GetRedirectLink('sitemap-lswcb'); ?>"><?php _e('Webmaster Center Blog','sitemap'); ?></a>
-							<br />
-							<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-prot'); ?>"><?php _e('Sitemaps Protocol','sitemap'); ?></a>
-							<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-ofaq'); ?>"><?php _e('Official Sitemaps FAQ','sitemap'); ?></a>
-							<a class="sm_button sm_pluginHome"   href="<?php echo $this->sg->GetRedirectLink('sitemap-afaq'); ?>"><?php _e('My Sitemaps FAQ','sitemap'); ?></a>
-						<?php $this->HtmlPrintBoxFooter(true); ?>
-						
-						<?php $this->HtmlPrintBoxHeader('dm_donations',__('Recent Donations:','sitemap'),true); ?>
-											
-							<?php if($this->sg->GetOption('i_hide_donors')!==true) { ?>
-								<iframe border="0" frameborder="0" scrolling="no" allowtransparency="yes" style="width:100%; height:80px;" src="<?php echo $this->sg->GetRedirectLink('sitemap-donorlist'); ?>">
-								<?php _e('List of the donors','sitemap'); ?>
-								</iframe><br />
-								<a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hidedonors=true"; ?>"><small><?php _e('Hide this list','sitemap'); ?></small></a><br /><br />
-							<?php } ?>
-							<a style="float:left; margin-right:5px; border:none;" href="javascript:document.getElementById('sm_donate_form').submit();"><img style="vertical-align:middle; border:none; margin-top:2px;" src="<?php echo $this->sg->GetPluginUrl(); ?>img/icon-donate.gif" border="0" alt="PayPal" title="Help me to continue support of this plugin :)" /></a>
-							<span><small><?php _e('Thanks for your support!','sitemap'); ?></small></span>
-							<div style="clear:left; height:1px;"></div>
-						<?php $this->HtmlPrintBoxFooter(true); ?>
+					<?php if(!$snl): ?>
 				
+							<?php $this->HtmlPrintBoxHeader('sm_pnres',__('About this Plugin:','sitemap'),true); ?>
+								<a class="sm_button sm_pluginHome"    href="<?php echo $this->sg->GetRedirectLink('sitemap-home'); ?>"><?php _e('Plugin Homepage','sitemap'); ?></a>
+								<a class="sm_button sm_pluginHome"    href="<?php echo $this->sg->GetRedirectLink('sitemap-feedback'); ?>"><?php _e('Suggest a Feature','sitemap'); ?></a>
+								<a class="sm_button sm_pluginList"    href="<?php echo $this->sg->GetRedirectLink('sitemap-list'); ?>"><?php _e('Notify List','sitemap'); ?></a>
+								<a class="sm_button sm_pluginSupport" href="<?php echo $this->sg->GetRedirectLink('sitemap-support'); ?>"><?php _e('Support Forum','sitemap'); ?></a>
+								<a class="sm_button sm_pluginBugs"    href="<?php echo $this->sg->GetRedirectLink('sitemap-bugs'); ?>"><?php _e('Report a Bug','sitemap'); ?></a>
+								
+								<a class="sm_button sm_donatePayPal"  href="<?php echo $this->sg->GetRedirectLink('sitemap-paypal'); ?>"><?php _e('Donate with PayPal','sitemap'); ?></a>
+								<a class="sm_button sm_donateAmazon"  href="<?php echo $this->sg->GetRedirectLink('sitemap-amazon'); ?>"><?php _e('My Amazon Wish List','sitemap'); ?></a>
+								<?php if(__('translator_name','sitemap')!='translator_name') {?><a class="sm_button sm_pluginSupport" href="<?php _e('translator_url','sitemap'); ?>"><?php _e('translator_name','sitemap'); ?></a><?php } ?>
+							<?php $this->HtmlPrintBoxFooter(true); ?>
+						
+						
+							<?php $this->HtmlPrintBoxHeader('sm_smres',__('Sitemap Resources:','sitemap'),true); ?>
+								<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-gwt'); ?>"><?php _e('Webmaster Tools','sitemap'); ?></a>
+								<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-gwb'); ?>"><?php _e('Webmaster Blog','sitemap'); ?></a>
+								
+								<a class="sm_button sm_resYahoo"     href="<?php echo $this->sg->GetRedirectLink('sitemap-yse'); ?>"><?php _e('Site Explorer','sitemap'); ?></a>
+								<a class="sm_button sm_resYahoo"     href="<?php echo $this->sg->GetRedirectLink('sitemap-ywb'); ?>"><?php _e('Search Blog','sitemap'); ?></a>
+								
+								<a class="sm_button sm_resBing"      href="<?php echo $this->sg->GetRedirectLink('sitemap-lwt'); ?>"><?php _e('Webmaster Tools','sitemap'); ?></a>
+								<a class="sm_button sm_resBing"      href="<?php echo $this->sg->GetRedirectLink('sitemap-lswcb'); ?>"><?php _e('Webmaster Center Blog','sitemap'); ?></a>
+								<br />
+								<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-prot'); ?>"><?php _e('Sitemaps Protocol','sitemap'); ?></a>
+								<a class="sm_button sm_resGoogle"    href="<?php echo $this->sg->GetRedirectLink('sitemap-ofaq'); ?>"><?php _e('Official Sitemaps FAQ','sitemap'); ?></a>
+								<a class="sm_button sm_pluginHome"   href="<?php echo $this->sg->GetRedirectLink('sitemap-afaq'); ?>"><?php _e('My Sitemaps FAQ','sitemap'); ?></a>
+							<?php $this->HtmlPrintBoxFooter(true); ?>
+							
+							<?php $this->HtmlPrintBoxHeader('dm_donations',__('Recent Donations:','sitemap'),true); ?>
+								<?php if($this->sg->GetOption('i_hide_donors')!==true) { ?>
+									<iframe border="0" frameborder="0" scrolling="no" allowtransparency="yes" style="width:100%; height:80px;" src="<?php echo $this->sg->GetRedirectLink('sitemap-donorlist'); ?>">
+									<?php _e('List of the donors','sitemap'); ?>
+									</iframe><br />
+									<a href="<?php echo $this->sg->GetBackLink() . "&amp;sm_hidedonors=true"; ?>"><small><?php _e('Hide this list','sitemap'); ?></small></a><br /><br />
+								<?php } ?>
+								<a style="float:left; margin-right:5px; border:none;" href="javascript:document.getElementById('sm_donate_form').submit();"><img style="vertical-align:middle; border:none; margin-top:2px;" src="<?php echo $this->sg->GetPluginUrl(); ?>img/icon-donate.gif" border="0" alt="PayPal" title="Help me to continue support of this plugin :)" /></a>
+								<span><small><?php _e('Thanks for your support!','sitemap'); ?></small></span>
+								<div style="clear:left; height:1px;"></div>
+							<?php $this->HtmlPrintBoxFooter(true); ?>
+							
+						
 						</div>
 					</div>
+					<?php endif; ?>
 					
 					<?php if($this->mode == 27): ?>
 						<div class="has-sidebar sm-padded" >
 					
-							<div id="post-body-content" class="has-sidebar-content">
+							<div id="post-body-content" class="<?php if(!$snl): ?>has-sidebar-content<?php endif; ?>">
 						
 								<div class="meta-box-sortabless">
 					<?php else: ?>
@@ -580,7 +636,7 @@ class GoogleSitemapGeneratorUI {
 					
 					<!-- Rebuild Area -->
 					<?php
-						$status = GoogleSitemapGeneratorStatus::Load();
+						$status = &GoogleSitemapGeneratorStatus::Load();
 						$head = __('The sitemap wasn\'t generated yet.','sitemap');
 						if($status != null) {
 							$st=$status->GetStartTime();
@@ -624,7 +680,7 @@ class GoogleSitemapGeneratorUI {
 												echo "<li class=\sm_optimize\">" . str_replace("%time%",$gt,__("It took %time% seconds to notify Google, maybe you want to disable this feature to reduce the building time.",'sitemap')) . "</li>";
 											}
 										} else {
-											echo "<li class=\"sm_error\">" . str_replace("%s",$status->_googleUrl,__('There was a problem while notifying Google. <a href="%s">View result</a>','sitemap')) . "</li>";
+											echo "<li class=\"sm_error\">" . str_replace("%s",wp_nonce_url($this->sg->GetBackLink() . "&sm_ping_service=google&noheader=true",'sitemap'),__('There was a problem while notifying Google. <a href="%s">View result</a>','sitemap')) . "</li>";
 										}
 									}
 									
@@ -636,7 +692,7 @@ class GoogleSitemapGeneratorUI {
 												echo "<li class=\sm_optimize\">" . str_replace("%time%",$yt,__("It took %time% seconds to notify YAHOO, maybe you want to disable this feature to reduce the building time.",'sitemap')) . "</li>";
 											}
 										} else {
-											echo "<li class=\"sm_error\">" . str_replace("%s",$status->_yahooUrl,__('There was a problem while notifying YAHOO. <a href="%s">View result</a>','sitemap')) . "</li>";
+											echo "<li class=\"sm_error\">" . str_replace("%s",wp_nonce_url($this->sg->GetBackLink() . "&sm_ping_service=yahoo&noheader=true",'sitemap'),__('There was a problem while notifying YAHOO. <a href="%s">View result</a>','sitemap')) . "</li>";
 										}
 									}
 									
@@ -648,7 +704,7 @@ class GoogleSitemapGeneratorUI {
 												echo "<li class=\sm_optimize\">" . str_replace("%time%",$at,__("It took %time% seconds to notify Bing, maybe you want to disable this feature to reduce the building time.",'sitemap')) . "</li>";
 											}
 										} else {
-											echo "<li class=\"sm_error\">" . str_replace("%s",$status->_msnUrl,__('There was a problem while notifying Bing. <a href="%s">View result</a>','sitemap')) . "</li>";
+											echo "<li class=\"sm_error\">" . str_replace("%s",wp_nonce_url($this->sg->GetBackLink() . "&sm_ping_service=msn&noheader=true",'sitemap'),__('There was a problem while notifying Bing. <a href="%s">View result</a>','sitemap')) . "</li>";
 										}
 									}
 									
@@ -660,7 +716,7 @@ class GoogleSitemapGeneratorUI {
 												echo "<li class=\sm_optimize\">" . str_replace("%time%",$at,__("It took %time% seconds to notify Ask.com, maybe you want to disable this feature to reduce the building time.",'sitemap')) . "</li>";
 											}
 										} else {
-											echo "<li class=\"sm_error\">" . str_replace("%s",$status->_askUrl,__('There was a problem while notifying Ask.com. <a href="%s">View result</a>','sitemap')) . "</li>";
+											echo "<li class=\"sm_error\">" . str_replace("%s",wp_nonce_url($this->sg->GetBackLink() . "&sm_ping_service=ask&noheader=true",'sitemap'),__('There was a problem while notifying Ask.com. <a href="%s">View result</a>','sitemap')) . "</li>";
 										}
 									}
 									
@@ -851,7 +907,7 @@ class GoogleSitemapGeneratorUI {
 									for($i=0; $i<count($this->sg->_pages); $i++) {
 										$v=&$this->sg->_pages[$i];
 										if($i>0) echo ",";
-										echo '{url:"' . $v->getUrl() . '", priority:"' . number_format($v->getPriority(),1,".","") . '", changeFreq:"' . $v->getChangeFreq() . '", lastChanged:"' . ($v!=null && $v->getLastMod()>0?date("Y-m-d",$v->getLastMod()):"") . '"}';
+										echo '{url:"' . $v->getUrl() . '", priority:' . number_format($v->getPriority(),1,".","") . ', changeFreq:"' . $v->getChangeFreq() . '", lastChanged:"' . ($v!=null && $v->getLastMod()>0?date("Y-m-d",$v->getLastMod()):"") . '"}';
 									}
 								}
 							?> ];
@@ -981,6 +1037,25 @@ class GoogleSitemapGeneratorUI {
 									<?php _e('Include tag pages', 'sitemap') ?>
 								</label>
 							</li>
+							<?php
+								$taxonomies = $this->sg->GetCustomTaxonomies();
+								
+								$enabledTaxonomies = $this->sg->GetOption('in_tax');
+								
+								foreach ($taxonomies as $taxName) {
+										
+									$taxonomy = get_taxonomy($taxName);
+									$selected = in_array($taxonomy->name, $enabledTaxonomies);
+									?>
+									<li>
+										<label for="sm_in_tax[<?php echo $taxonomy->name; ?>]">
+											<input type="checkbox" id="sm_in_tax[<?php echo $taxonomy->name; ?>]" name="sm_in_tax[<?php echo $taxonomy->name; ?>]" <?php echo $selected?"checked=\"checked\"":""; ?> />
+											<?php echo str_replace('%s',$taxonomy->label,__('Include taxonomy pages for %s', 'sitemap')); ?>
+										</label>
+									<li>
+									<?php
+								}
+							?>
 							<?php endif; ?>
 							<li>
 								<label for="sm_in_auth">

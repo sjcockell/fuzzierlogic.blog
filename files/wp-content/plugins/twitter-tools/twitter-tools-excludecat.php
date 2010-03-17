@@ -3,7 +3,7 @@
 Plugin Name: Twitter Tools - Exclude Category 
 Plugin URI: http://crowdfavorite.com/wordpress/ 
 Description: Exclude posts in certain categories from being tweeted by Twitter Tools. This plugin relies on Twitter Tools, configure it on the Twitter Tools settings page.
-Version: 2.0 
+Version: 2.1.2 
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */
@@ -21,7 +21,7 @@ function aktt_excludecat_request_handler() {
 		switch ($_POST['cf_action']) {
 			case 'aktt_excludecat_update_settings':
 				aktt_excludecat_save_settings();
-				wp_redirect(trailingslashit(get_bloginfo('wpurl')).'wp-admin/options-general.php?page=twitter-tools.php&updated=true');
+				wp_redirect(admin_url('options-general.php?page=twitter-tools.php&updated=true'));
 				die();
 				break;
 		}
@@ -69,7 +69,7 @@ jQuery(function() {
 </script>
 <div class="wrap">
 	<h2>'.__('Exclude Categories for Twitter Tools', 'twitter-tools-excludecat').'</h2>
-	<form id="aktt_excludecat_settings_form" name="aktt_excludecat_settings_form" action="'.get_bloginfo('wpurl').'/wp-admin/options-general.php" method="post">
+	<form id="aktt_excludecat_settings_form" name="aktt_excludecat_settings_form" action="'.admin_url('options-general.php').'" method="post">
 		<input type="hidden" name="cf_action" value="aktt_excludecat_update_settings" />
 		<fieldset class="options">
 			<p>'.__('Posts in selected categories will be excluded from blog post tweets', 'twitter-tools-excludecat').'</p>

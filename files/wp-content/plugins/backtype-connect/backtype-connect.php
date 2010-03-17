@@ -3,7 +3,7 @@
 Plugin Name: BackType Connect
 Plugin URI: http://www.backtype.com/plugins/connect/
 Description: Show related conversations (from other blogs, Twitter, Digg, FriendFeed and more) inline with your own comments.
-Version: 0.2.4
+Version: 0.2.5
 Author: BackType <support@backtype.com>
 Author URI: http://www.backtype.com/
 */
@@ -25,7 +25,7 @@ Author URI: http://www.backtype.com/
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('BTC_VERSION', '0.2.4');
+define('BTC_VERSION', '0.2.5');
 
 define('BTC_API_REGISTER_URL', 'http://api.backtype.com/register-connect.xml');
 define('BTC_API_CONNECT_URL', 'http://api.backtype.com/comments/connect.xml');
@@ -314,7 +314,7 @@ function btc_get_avatar($avatar, $id_or_email, $size='96', $default='', $alt='')
 			$alt = '';
 			switch ($id_or_email->comment_agent) {
 				case 'btc_'.BTC_SRC_TWITTER:
-					$default = 'http://btspiurl.appspot.com/' . $id_or_email->comment_author;
+					$default = 'http://img.tweetimag.es/i/' . $id_or_email->comment_author . '_n';
 					break;
 				case 'btc_'.BTC_SRC_FRIENDFEED:
 					$default = $id_or_email->comment_author_url . '/picture?size=medium';
