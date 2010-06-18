@@ -3,7 +3,7 @@
 Plugin Name: Twitter Tools - Exclude Category 
 Plugin URI: http://crowdfavorite.com/wordpress/ 
 Description: Exclude posts in certain categories from being tweeted by Twitter Tools. This plugin relies on Twitter Tools, configure it on the Twitter Tools settings page.
-Version: 2.1.2 
+Version: 2.2.1 
 Author: Crowd Favorite
 Author URI: http://crowdfavorite.com
 */

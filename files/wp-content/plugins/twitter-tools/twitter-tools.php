@@ -3,12 +3,12 @@
 Plugin Name: Twitter Tools
 Plugin URI: http://alexking.org/projects/wordpress
 Description: A complete integration between your WordPress blog and <a href="http://twitter.com">Twitter</a>. Bring your tweets into your blog and pass your blog posts to Twitter. Show your tweets in your sidebar, and post tweets from your WordPress admin.
-Version: 2.1.2
+Version: 2.2.1
 Author: Alex King
 Author URI: http://alexking.org
 */
 
-// Copyright (c) 2007-2009 Crowd Favorite, Ltd., Alex King. All rights reserved.
+// Copyright (c) 2007-2010 Crowd Favorite, Ltd., Alex King. All rights reserved.
 //
 // Released under the GPL license
 // http://www.opensource.org/licenses/gpl-license.php
@@ -715,6 +715,7 @@ function aktt_update_tweets() {
 		do_action('aktt_update_tweets');
 		return;
 	}
+	$data = preg_replace('/"id":(\d+)/', '"id":"$1"', $data); // hack for json_decode on 32-bit PHP
 	$tweets = json_decode($data);
 
 	if (is_array($tweets) && count($tweets)) {
@@ -884,15 +885,15 @@ function aktt_tweet_display($tweet, $time = 'relative') {
 function aktt_make_clickable($tweet) {
 	$tweet .= ' ';
 	$tweet = preg_replace_callback(
-			'/@([a-zA-Z0-9_]{1,})(\s|$)/'
+			'/(^|\s)@([a-zA-Z0-9_]{1,})(\W)/'
 			, create_function(
 				'$matches'
-				, 'return aktt_profile_link($matches[1], \'@\', $matches[2]);'
+				, 'return aktt_profile_link($matches[2], \' @\', $matches[3]);'
 			)
 			, $tweet
 	);
 	$tweet = preg_replace_callback(
-		'/(^|\s)#([a-zA-Z0-9_]{1,})(\s|$)/'
+		'/(^|\s)#([a-zA-Z0-9_]{1,})(\W)/'
 		, create_function(
 			'$matches'
 			, 'return aktt_hashtag_link($matches[2], \' #\', \'\');'
@@ -1093,7 +1094,7 @@ function aktt_request_handler() {
 				wp_redirect(admin_url('options-general.php?page=twitter-tools.php&tweet-checking-reset=true'));
 				die();
 				break;
-			case 'aktt_reset_tweet_checking':
+			case 'aktt_reset_digests':
 				aktt_reset_digests();
 				wp_redirect(admin_url('options-general.php?page=twitter-tools.php&digest-reset=true'));
 				die();

@@ -21,9 +21,9 @@
 <script type="text/javascript" src="<?php bloginfo('template_url'); ?>/js/dropdowns.js"></script>
 <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="<?php bloginfo('rss2_url'); ?>" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-<link rel="me" type="text/html" href="http://www.google.com/profiles/sjcockell"/>
 <?php wp_head(); ?>
 <!--Added for Google Analytics -->
+<link rel="me" type="text/html" href="http://www.google.com/profiles/sjcockell"/>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

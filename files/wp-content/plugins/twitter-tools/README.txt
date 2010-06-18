@@ -3,7 +3,7 @@ Tags: twitter, tweet, integration, post, digest, notify, integrate, archive, wid
 Contributors: alexkingorg. crowdfavorite
 Requires at least: 2.6
 Tested up to: 2.9.1
-Stable tag: 2.1.2
+Stable tag: 2.2.1
 
 Twitter Tools is a plugin that creates a complete integration between your WordPress blog and your Twitter account.
 
@@ -221,9 +221,20 @@ No, this is not a good idea. Twitter Tools needs to be able to look at the begin
 
 == Changelog ==
 
+= 2.2.1 =
+
+* Typo-fix that should allow resetting digests properly (not sure when this broke, thanks lionel_chollet).
+
+
+= 2.2 =
+
+* The use of the native `json_encode()` function, required by the changes in WordPress 2.9 (version 2.1) created a problem for users with servers running 32-bit PHP. the `json_decode()` function treats the tweet ID field as an integer instead of a string, which causes the issues. Thanks to Joe Tortuga and Ciaran Walsh for sending in the fix.
+
+
 = 2.1.2 =
 
 * Missed one last(?) instance of Services_JSON
+
 
 = 2.1.1 =
 
